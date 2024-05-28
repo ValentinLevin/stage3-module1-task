@@ -31,7 +31,7 @@ class RepositoryImpl<T extends Entity> implements Repository<T> {
     }
 
     @Override
-    public T findById(Long id) throws KeyNullReferenceException, EntityNotFoundException {
+    public T readById(Long id) throws KeyNullReferenceException, EntityNotFoundException {
         if (id == null) {
             throw new KeyNullReferenceException();
         }
@@ -39,7 +39,7 @@ class RepositoryImpl<T extends Entity> implements Repository<T> {
     }
 
     @Override
-    public T save(T entity) throws EntityNullReferenceException, EntityValidationException {
+    public T create(T entity) throws EntityNullReferenceException, EntityValidationException {
         if (entity == null) {
             throw new EntityNullReferenceException();
         }
@@ -50,7 +50,18 @@ class RepositoryImpl<T extends Entity> implements Repository<T> {
     }
 
     @Override
-    public boolean delete(T entity) throws EntityNullReferenceException, KeyNullReferenceException, EntityNotFoundException {
+    public T update(T entity) throws EntityNullReferenceException, EntityValidationException {
+        if (entity == null) {
+            throw new EntityNullReferenceException();
+        }
+
+        validateEntity(entity);
+
+        return this.dataSource.save(entity);
+    }
+
+    @Override
+    public Boolean delete(T entity) throws EntityNullReferenceException, KeyNullReferenceException, EntityNotFoundException {
         if (entity == null) {
             throw new EntityNullReferenceException();
         }
@@ -58,7 +69,7 @@ class RepositoryImpl<T extends Entity> implements Repository<T> {
     }
 
     @Override
-    public boolean deleteById(Long id) throws KeyNullReferenceException, EntityNotFoundException {
+    public Boolean deleteById(Long id) throws KeyNullReferenceException, EntityNotFoundException {
         if (id == null) {
             throw new KeyNullReferenceException();
         }
@@ -66,12 +77,12 @@ class RepositoryImpl<T extends Entity> implements Repository<T> {
     }
 
     @Override
-    public List<T> findAll() {
+    public List<T> readAll() {
         return this.dataSource.findAll();
     }
 
     @Override
-    public List<T> findAll(long offset, long limit) {
+    public List<T> readAll(long offset, long limit) {
         return this.dataSource.findAll(offset, limit);
     }
 

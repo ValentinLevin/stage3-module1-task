@@ -1,12 +1,12 @@
 package com.mjc.school.service.impl;
 
+import com.mjc.school.dto.EditNewsRequestDTO;
+import com.mjc.school.exception.AuthorNotFoundServiceException;
 import com.mjc.school.exception.CustomRepositoryException;
+import com.mjc.school.exception.DTOValidationServiceException;
 import com.mjc.school.model.Author;
 import com.mjc.school.model.News;
 import com.mjc.school.repository.Repository;
-import com.mjc.school.dto.EditNewsRequestDTO;
-import com.mjc.school.exception.AuthorNotFoundServiceException;
-import com.mjc.school.exception.DTOValidationServiceException;
 import com.mjc.school.service.NewsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -43,14 +43,14 @@ class NewsServiceAddNewsTest {
 
     @Test
     @DisplayName("When the added news contains an author who is not in the list of authors, the method will throw an AuthorNotFoundException exception")
-    void add_incorrectData_throwsAuthorNotExistsException() throws CustomRepositoryException {
+    void create_incorrectData_throwsAuthorNotExistsException() throws CustomRepositoryException {
         EditNewsRequestDTO requestDTO = new EditNewsRequestDTO(
                 "News title",
                 "News content",
                 2L
         );
         Mockito.when(authorRepository.existsById(2L)).thenReturn(false);
-        assertThatThrownBy(() -> newsService.add(requestDTO)).isInstanceOf(AuthorNotFoundServiceException.class);
+        assertThatThrownBy(() -> newsService.create(requestDTO)).isInstanceOf(AuthorNotFoundServiceException.class);
     }
     @Test
     @DisplayName("Cases of correctness of news data. No exception should be thrown")
@@ -75,17 +75,17 @@ class NewsServiceAddNewsTest {
         );
 
         Mockito.when(authorRepository.existsById(requestDTO.getAuthorId())).thenReturn(true);
-        Mockito.when(authorRepository.findById(author.getId())).thenReturn(author);
+        Mockito.when(authorRepository.readById(author.getId())).thenReturn(author);
 
-        Mockito.when(newsRepository.save(Mockito.any(News.class))).thenReturn(addedNews);
-        Mockito.when(newsRepository.findById(addedNews.getId())).thenReturn(addedNews);
+        Mockito.when(newsRepository.create(Mockito.any(News.class))).thenReturn(addedNews);
+        Mockito.when(newsRepository.readById(addedNews.getId())).thenReturn(addedNews);
 
         LocalDateTime createdAtFrom = LocalDateTime.now();
-        assertThatNoException().isThrownBy(() -> newsService.add(requestDTO));
+        assertThatNoException().isThrownBy(() -> newsService.create(requestDTO));
         LocalDateTime createdAtTo= LocalDateTime.now();
 
         ArgumentCaptor<News> argumentCaptor = ArgumentCaptor.forClass(News.class);
-        Mockito.verify(newsRepository).save(argumentCaptor.capture());
+        Mockito.verify(newsRepository).create(argumentCaptor.capture());
 
         News newsToSave = argumentCaptor.getValue();
 
@@ -101,7 +101,7 @@ class NewsServiceAddNewsTest {
                         "1234567890123456789012345678901234567890123456789012345"
         );
 
-        assertThatNoException().isThrownBy(() -> newsService.add(requestDTO));
+        assertThatNoException().isThrownBy(() -> newsService.create(requestDTO));
     }
 
     static Stream<EditNewsRequestDTO> dtoValidationDataSource() {
@@ -123,18 +123,18 @@ class NewsServiceAddNewsTest {
     @ParameterizedTest
     @MethodSource("dtoValidationDataSource")
     @DisplayName("DTOValidationException will be thrown when calling the add method.")
-    void add_titleTooShort_throwsDTOValidateException(EditNewsRequestDTO request) {
-        assertThatThrownBy(() -> newsService.add(request)).isInstanceOf(DTOValidationServiceException.class);
+    void create_titleTooShort_throwsDTOValidateException(EditNewsRequestDTO request) {
+        assertThatThrownBy(() -> newsService.create(request)).isInstanceOf(DTOValidationServiceException.class);
     }
 
     @Test
     @DisplayName("When passing an incorrect id for author, an AuthorNotFoundException will be thrown")
-    void add_notFoundNewAuthor_throwsDTOValidateException() {
+    void create_notFoundNewAuthor_throwsDTOValidateException() {
         EditNewsRequestDTO requestDTO = new EditNewsRequestDTO(
                 "News title",
                 "News content",
                 2L
         );
-        assertThatThrownBy(() -> newsService.add(requestDTO)).isInstanceOf(AuthorNotFoundServiceException.class);
+        assertThatThrownBy(() -> newsService.create(requestDTO)).isInstanceOf(AuthorNotFoundServiceException.class);
     }
 }

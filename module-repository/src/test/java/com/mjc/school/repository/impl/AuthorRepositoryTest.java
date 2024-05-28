@@ -32,11 +32,11 @@ class AuthorRepositoryTest {
 
     @Test
     @DisplayName("When requesting the author by id, the required dataSource method was called")
-    void findById_foundEntity() throws CustomRepositoryException {
+    void readById_foundEntity() throws CustomRepositoryException {
         Author expectedAuthor = new Author(1L, "Author 1 name");
         Mockito.when(dataSource.findById(1L)).thenReturn(expectedAuthor);
 
-        Author actualAuthor = this.repository.findById(1L);
+        Author actualAuthor = this.repository.readById(1L);
 
         assertThat(actualAuthor).isEqualTo(expectedAuthor);
         Mockito.verify(dataSource, Mockito.only()).findById(1L);
@@ -56,15 +56,21 @@ class AuthorRepositoryTest {
     }
 
     @Test
-    @DisplayName("When trying to save a Null object, an EntityNullReferenceException exception will be thrown")
-    void save_entityNullReference_throwsEntityNullReferenceException() {
-        assertThatThrownBy(() -> repository.save(null)).isInstanceOf(EntityNullReferenceException.class);
+    @DisplayName("When trying to create a Null object, an EntityNullReferenceException exception will be thrown")
+    void create_entityNullReference_throwsEntityNullReferenceException() {
+        assertThatThrownBy(() -> repository.create(null)).isInstanceOf(EntityNullReferenceException.class);
+    }
+
+    @Test
+    @DisplayName("When trying to update a Null object, an EntityNullReferenceException exception will be thrown")
+    void update_entityNullReference_throwsEntityNullReferenceException() {
+        assertThatThrownBy(() -> repository.update(null)).isInstanceOf(EntityNullReferenceException.class);
     }
 
     @Test
     @DisplayName("When attempting to query an object using Null as a key, an KeyNullReferenceException exception will be thrown")
-    void findById_keyNullReference_throwsKeyNullReferenceException() {
-        assertThatThrownBy(() -> repository.findById(null)).isInstanceOf(KeyNullReferenceException.class);
+    void readById_keyNullReference_throwsKeyNullReferenceException() {
+        assertThatThrownBy(() -> repository.readById(null)).isInstanceOf(KeyNullReferenceException.class);
     }
 
     @Test
@@ -80,9 +86,16 @@ class AuthorRepositoryTest {
     }
 
     @Test
-    void authorNameTooSmall_throwsEntityValidationException() throws CustomRepositoryException {
+    void create_authorNameTooSmall_throwsEntityValidationException() throws CustomRepositoryException {
         Author author = new Author(1L, "12");
         Mockito.doReturn(author).when(dataSource).save(author);
-        assertThatThrownBy(() -> repository.save(author)).isInstanceOf(EntityValidationException.class);
+        assertThatThrownBy(() -> repository.create(author)).isInstanceOf(EntityValidationException.class);
+    }
+
+    @Test
+    void update_authorNameTooSmall_throwsEntityValidationException() throws CustomRepositoryException {
+        Author author = new Author(1L, "12");
+        Mockito.doReturn(author).when(dataSource).save(author);
+        assertThatThrownBy(() -> repository.update(author)).isInstanceOf(EntityValidationException.class);
     }
 }

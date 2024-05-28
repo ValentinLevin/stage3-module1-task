@@ -34,7 +34,7 @@ class NewsRepositoryTest {
 
     @Test
     @DisplayName("When requesting news by id, the required dataSource method was called")
-    void findById_foundEntity() throws CustomRepositoryException {
+    void readById_foundEntity() throws CustomRepositoryException {
         News expectedNews =
                 new News(
                         1L,
@@ -46,7 +46,7 @@ class NewsRepositoryTest {
                 );
         Mockito.when(dataSource.findById(1L)).thenReturn(expectedNews);
 
-        News actualNews = this.repository.findById(1L);
+        News actualNews = this.repository.readById(1L);
 
         assertThat(actualNews).isEqualTo(expectedNews);
         Mockito.verify(dataSource, Mockito.only()).findById(1L);
@@ -76,15 +76,21 @@ class NewsRepositoryTest {
     }
 
     @Test
-    @DisplayName("When trying to save a Null object, an EntityNullReferenceException exception will be thrown")
-    void save_entityNullReference_throwsEntityNullReferenceException() {
-        assertThatThrownBy(() -> repository.save(null)).isInstanceOf(EntityNullReferenceException.class);
+    @DisplayName("When trying to create a Null object, an EntityNullReferenceException exception will be thrown")
+    void create_entityNullReference_throwsEntityNullReferenceException() {
+        assertThatThrownBy(() -> repository.create(null)).isInstanceOf(EntityNullReferenceException.class);
+    }
+
+    @Test
+    @DisplayName("When trying to create a Null object, an EntityNullReferenceException exception will be thrown")
+    void update_entityNullReference_throwsEntityNullReferenceException() {
+        assertThatThrownBy(() -> repository.update(null)).isInstanceOf(EntityNullReferenceException.class);
     }
 
     @Test
     @DisplayName("When requesting an object with a Null key, an KeyNullReferenceException exception will be thrown")
-    void findById_keyNullReference_throwsKeyNullReferenceException() {
-        assertThatThrownBy(() -> repository.findById(null)).isInstanceOf(KeyNullReferenceException.class);
+    void readById_keyNullReference_throwsKeyNullReferenceException() {
+        assertThatThrownBy(() -> repository.readById(null)).isInstanceOf(KeyNullReferenceException.class);
     }
 
     @Test
@@ -101,7 +107,21 @@ class NewsRepositoryTest {
 
     @Test
     @DisplayName("If the entity field values are incorrect, throw an EntityValidationException")
-    void authorTitleAndContentNotValidated_throwsEntityValidationException() {
+    void create_authorTitleAndContentNotValidated_throwsEntityValidationException() {
+        News news = new News(
+                0L,
+                "12",
+                "123",
+                null,
+                null,
+                null
+        );
+        assertThatThrownBy(() -> repository.create(news)).isInstanceOf(EntityValidationException.class);
+    }
+
+    @Test
+    @DisplayName("If the entity field values are incorrect, throw an EntityValidationException")
+    void update_authorTitleAndContentNotValidated_throwsEntityValidationException() {
         News news = new News(
                 1L,
                 "12",
@@ -110,6 +130,6 @@ class NewsRepositoryTest {
                 null,
                 null
         );
-        assertThatThrownBy(() -> repository.save(news)).isInstanceOf(EntityValidationException.class);
+        assertThatThrownBy(() -> repository.update(news)).isInstanceOf(EntityValidationException.class);
     }
 }

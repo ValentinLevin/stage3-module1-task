@@ -41,7 +41,7 @@ class NewsServiceTest {
 
     @Test
     @DisplayName("Checking the response to a single news request")
-    void findById_exists_true() throws CustomServiceException, CustomRepositoryException {
+    void readById_exists_true() throws CustomServiceException, CustomRepositoryException {
         Author author = new Author(1L, "Author 1 name");
         News news =
                 new News(
@@ -53,8 +53,8 @@ class NewsServiceTest {
                         1L
                 );
 
-        Mockito.doReturn(author).when(authorRepository).findById(1L);
-        Mockito.doReturn(news).when(newsRepository).findById(1L);
+        Mockito.doReturn(author).when(authorRepository).readById(1L);
+        Mockito.doReturn(news).when(newsRepository).readById(1L);
 
         NewsDTO expectedNewsDTO =
                 new NewsDTO(
@@ -66,16 +66,16 @@ class NewsServiceTest {
                         new AuthorDTO(author.getId(), author.getName())
                 );
 
-        NewsDTO actualNewsDTO = newsService.findById(1L);
+        NewsDTO actualNewsDTO = newsService.readById(1L);
 
         assertThat(actualNewsDTO).isEqualTo(expectedNewsDTO);
     }
 
     @Test
     @DisplayName("If you specify an incorrect news id, a NewsNotFoundException will be thrown")
-    void findById_exists_false() throws CustomRepositoryException {
-        Mockito.when(newsRepository.findById(1L)).thenThrow(EntityNotFoundException.class);
-        assertThatThrownBy(() -> newsService.findById(1L)).isInstanceOf(NewsNotFoundServiceException.class);
+    void readById_exists_false() throws CustomRepositoryException {
+        Mockito.when(newsRepository.readById(1L)).thenThrow(EntityNotFoundException.class);
+        assertThatThrownBy(() -> newsService.readById(1L)).isInstanceOf(NewsNotFoundServiceException.class);
     }
 
     @Test

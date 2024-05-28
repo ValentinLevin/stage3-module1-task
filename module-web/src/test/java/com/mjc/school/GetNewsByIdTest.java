@@ -64,7 +64,7 @@ class GetNewsByIdTest {
 
         Mockito.when(request.getPathInfo()).thenReturn("/12");
 
-        Mockito.when(newsService.findById(Mockito.anyLong())).thenReturn(newsDTO);
+        Mockito.when(newsService.readById(Mockito.anyLong())).thenReturn(newsDTO);
 
         new NewsItemServlet(newsService).service(request, response);
 
@@ -82,7 +82,7 @@ class GetNewsByIdTest {
     @DisplayName("Request news. No news found")
     void notFoundById() throws ServletException, IOException, CustomServiceException {
         Mockito.when(request.getPathInfo()).thenReturn("/1");
-        Mockito.when(newsService.findById(Mockito.anyLong())).thenThrow(NewsNotFoundServiceException.class);
+        Mockito.when(newsService.readById(Mockito.anyLong())).thenThrow(NewsNotFoundServiceException.class);
 
         new NewsItemServlet(newsService).service(request, response);
 

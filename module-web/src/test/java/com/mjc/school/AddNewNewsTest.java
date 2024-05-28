@@ -77,12 +77,12 @@ class AddNewNewsTest {
                 "",
                 new AuthorDTO(exceptedRequestDTO.getAuthorId(), "")
         );
-        Mockito.when(newsService.add(Mockito.any(EditNewsRequestDTO.class))).thenReturn(createdNews);
+        Mockito.when(newsService.create(Mockito.any(EditNewsRequestDTO.class))).thenReturn(createdNews);
 
         new NewsServlet(newsService).service(request, response);
 
         ArgumentCaptor<EditNewsRequestDTO> editNewsRequestDTOArgumentCaptor = ArgumentCaptor.forClass(EditNewsRequestDTO.class);
-        Mockito.verify(newsService).add(editNewsRequestDTOArgumentCaptor.capture());
+        Mockito.verify(newsService).create(editNewsRequestDTOArgumentCaptor.capture());
 
         EditNewsRequestDTO actualRequestDTO = editNewsRequestDTOArgumentCaptor.getValue();
 
@@ -137,7 +137,7 @@ class AddNewNewsTest {
         BufferedReader bufferedReader = new BufferedReader(reader);
         Mockito.when(request.getReader()).thenReturn(bufferedReader);
 
-        Mockito.when(newsService.add(Mockito.any())).thenThrow(new DTOValidationServiceException(requestBody));
+        Mockito.when(newsService.create(Mockito.any())).thenThrow(new DTOValidationServiceException(requestBody));
 
         RESULT_CODE expectedResultCode = ResultCodeMapper.getResultCode(DTOValidationServiceException.class);
 
@@ -157,7 +157,7 @@ class AddNewNewsTest {
         BufferedReader bufferedReader = new BufferedReader(reader);
         Mockito.when(request.getReader()).thenReturn(bufferedReader);
 
-        Mockito.when(newsService.add(Mockito.any())).thenThrow(DTOValidationServiceException.class);
+        Mockito.when(newsService.create(Mockito.any())).thenThrow(DTOValidationServiceException.class);
 
         RESULT_CODE expectedResultCode = ResultCodeMapper.getResultCode(DTOValidationServiceException.class);
 
@@ -184,7 +184,7 @@ class AddNewNewsTest {
         BufferedReader bufferedReader = new BufferedReader(reader);
         Mockito.when(request.getReader()).thenReturn(bufferedReader);
 
-        Mockito.when(newsService.add(Mockito.any())).thenThrow(AuthorNotFoundServiceException.class);
+        Mockito.when(newsService.create(Mockito.any())).thenThrow(AuthorNotFoundServiceException.class);
 
         RESULT_CODE expectedResultCode = ResultCodeMapper.getResultCode(AuthorNotFoundServiceException.class);
 

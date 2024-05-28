@@ -1,15 +1,10 @@
 package com.mjc.school.service.impl;
 
-import com.mjc.school.exception.CustomRepositoryException;
-import com.mjc.school.exception.EntityNotFoundException;
+import com.mjc.school.dto.EditNewsRequestDTO;
+import com.mjc.school.exception.*;
 import com.mjc.school.model.Author;
 import com.mjc.school.model.News;
 import com.mjc.school.repository.Repository;
-import com.mjc.school.dto.EditNewsRequestDTO;
-import com.mjc.school.exception.AuthorNotFoundServiceException;
-import com.mjc.school.exception.CustomServiceException;
-import com.mjc.school.exception.DTOValidationServiceException;
-import com.mjc.school.exception.NewsNotFoundServiceException;
 import com.mjc.school.service.NewsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -72,8 +67,8 @@ class NewsServiceUpdateNewsTest {
         );
 
         Mockito.when(authorRepository.existsById(requestDTO.getAuthorId())).thenReturn(true);
-        Mockito.when(newsRepository.findById(newsIdToChange)).thenReturn(newsBeforeChange);
-        Mockito.when(newsRepository.save(Mockito.any(News.class))).thenReturn(newsAfterChange);
+        Mockito.when(newsRepository.readById(newsIdToChange)).thenReturn(newsBeforeChange);
+        Mockito.when(newsRepository.update(Mockito.any(News.class))).thenReturn(newsAfterChange);
 
         ArgumentCaptor<News> argumentCaptor = ArgumentCaptor.forClass(News.class);
 
@@ -81,7 +76,7 @@ class NewsServiceUpdateNewsTest {
         newsService.update(newsIdToChange, requestDTO);
         LocalDateTime updateDateTimeTo = LocalDateTime.now();
 
-        Mockito.verify(newsRepository).save(argumentCaptor.capture());
+        Mockito.verify(newsRepository).update(argumentCaptor.capture());
 
         News actualNewsToSave = argumentCaptor.getValue();
 
@@ -120,8 +115,8 @@ class NewsServiceUpdateNewsTest {
         );
 
         Mockito.when(authorRepository.existsById(requestDTO.getAuthorId())).thenReturn(true);
-        Mockito.when(newsRepository.findById(newsIdForChange)).thenReturn(newsBeforeChange);
-        Mockito.when(newsRepository.save(Mockito.any(News.class))).thenReturn(newsAfterChange);
+        Mockito.when(newsRepository.readById(newsIdForChange)).thenReturn(newsBeforeChange);
+        Mockito.when(newsRepository.update(Mockito.any(News.class))).thenReturn(newsAfterChange);
 
         assertThatNoException().isThrownBy(() -> newsService.update(newsIdForChange, requestDTO));
 
@@ -180,7 +175,7 @@ class NewsServiceUpdateNewsTest {
                 "News content",
                 2L
         );
-        Mockito.when(newsRepository.findById(newsIdForUpdate)).thenThrow(EntityNotFoundException.class);
+        Mockito.when(newsRepository.readById(newsIdForUpdate)).thenThrow(EntityNotFoundException.class);
         assertThatThrownBy(() -> newsService.update(newsIdForUpdate, requestDTO)).isInstanceOf(NewsNotFoundServiceException.class);
     }
 }

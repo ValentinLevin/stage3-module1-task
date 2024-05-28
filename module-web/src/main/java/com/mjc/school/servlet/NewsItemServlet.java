@@ -58,7 +58,7 @@ public class NewsItemServlet extends HttpServlet {
         RESULT_CODE resultCode;
         try {
             newsId = HttpServletRequestUtils.getIdFromPath(req);
-            NewsDTO newsDTO = newsService.findById(newsId);
+            NewsDTO newsDTO = newsService.readById(newsId);
             responseBody = new GetNewsItemResponseDTO(newsDTO);
             resultCode = RESULT_CODE.SUCCESS;
         } catch (NullAuthorIdServiceException | AuthorNotFoundServiceException e) {

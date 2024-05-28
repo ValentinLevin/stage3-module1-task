@@ -33,7 +33,7 @@ public class NewsServlet extends HttpServlet {
         try {
             int limit = HttpServletRequestUtils.getLimitValueFromRequest(req);
             int offset = HttpServletRequestUtils.getOffsetValueFromRequest(req);
-            List<NewsDTO> news = this.newsService.findAll(offset, limit);
+            List<NewsDTO> news = this.newsService.readAll(offset, limit);
             long totalCount = this.newsService.count();
             responseBody = new GetNewsListResponseDTO(news, offset + 1L, news.size(), totalCount);
             resultCode = RESULT_CODE.SUCCESS;
@@ -71,7 +71,7 @@ public class NewsServlet extends HttpServlet {
         RESULT_CODE resultCode;
         try {
             EditNewsRequestDTO newsDTO = HttpServletRequestUtils.readObjectFromRequestBody(req, EditNewsRequestDTO.class);
-            NewsDTO createdNewsDTO = newsService.add(newsDTO);
+            NewsDTO createdNewsDTO = newsService.create(newsDTO);
 
             URI createdNewsUrl = new URI("/news/" + createdNewsDTO.getId());
             resp.addHeader("Location", createdNewsUrl.getPath());

@@ -41,7 +41,7 @@ class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public NewsDTO add(
+    public NewsDTO create(
             EditNewsRequestDTO newsDTO
     ) throws DTOValidationServiceException, AuthorNotFoundServiceException, NullAuthorIdServiceException, NewsNotFoundServiceException, NullNewsIdServiceException {
         validateDTO(newsDTO);
@@ -59,12 +59,12 @@ class NewsServiceImpl implements NewsService {
         news.setLastUpdateDate(news.getCreateDate());
 
         try {
-            news = newsRepository.save(news);
+            news = newsRepository.create(news);
         } catch (EntityValidationException | EntityNullReferenceException e) {
             throw new DTOValidationServiceException(e.getMessage());
         }
 
-        return findById(news.getId());
+        return readById(news.getId());
     }
 
     @Override
@@ -79,7 +79,7 @@ class NewsServiceImpl implements NewsService {
 
         News news;
         try {
-            news = newsRepository.findById(newsId);
+            news = newsRepository.readById(newsId);
         } catch (KeyNullReferenceException e) {
             throw new NullNewsIdServiceException();
         } catch (EntityNotFoundException e) {
@@ -100,21 +100,21 @@ class NewsServiceImpl implements NewsService {
         news.setLastUpdateDate(LocalDateTime.now());
 
         try {
-            news = newsRepository.save(news);
+            news = newsRepository.update(news);
         } catch (EntityNullReferenceException e) {
             throw new NullNewsIdServiceException();
         } catch (EntityValidationException e) {
             throw new DTOValidationServiceException(e.getMessage());
         }
 
-        return findById(news.getId());
+        return readById(news.getId());
     }
 
     @Override
-    public NewsDTO findById(long id) throws NullNewsIdServiceException, NewsNotFoundServiceException, NullAuthorIdServiceException, AuthorNotFoundServiceException {
+    public NewsDTO readById(long id) throws NullNewsIdServiceException, NewsNotFoundServiceException, NullAuthorIdServiceException, AuthorNotFoundServiceException {
         News news;
         try {
-            news = this.newsRepository.findById(id);
+            news = this.newsRepository.readById(id);
         } catch (KeyNullReferenceException e) {
             throw new NullNewsIdServiceException();
         } catch (EntityNotFoundException e) {
@@ -123,7 +123,7 @@ class NewsServiceImpl implements NewsService {
 
         Author author;
         try {
-            author = this.authorRepository.findById(news.getAuthorId());
+            author = this.authorRepository.readById(news.getAuthorId());
         } catch (KeyNullReferenceException e) {
             throw new NullAuthorIdServiceException();
         } catch (EntityNotFoundException e) {
@@ -137,21 +137,21 @@ class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<NewsDTO> findAll() throws AuthorNotFoundServiceException {
-        return this.findAll(0, -1);
+    public List<NewsDTO> readAll() throws AuthorNotFoundServiceException {
+        return this.readAll(0, -1);
     }
 
     @Override
-    public List<NewsDTO> findAll(long offset, long limit) throws AuthorNotFoundServiceException {
+    public List<NewsDTO> readAll(long offset, long limit) throws AuthorNotFoundServiceException {
         Map<Long, Author> authors =
-                this.authorRepository.findAll().stream()
+                this.authorRepository.readAll().stream()
                         .collect(Collectors.toMap(Author::getId, item -> item));
 
         List<News> news;
         if (offset == 0 && limit == -1) {
-            news = this.newsRepository.findAll();
+            news = this.newsRepository.readAll();
         } else {
-            news = this.newsRepository.findAll(offset, limit);
+            news = this.newsRepository.readAll(offset, limit);
         }
 
         List<NewsDTO> newsDTOList = new ArrayList<>();
