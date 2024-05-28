@@ -151,7 +151,7 @@ class NewsServiceImpl implements NewsService {
         if (offset == 0 && limit == -1) {
             newsModels = this.newsRepository.readAll();
         } else {
-            newsModels = this.newsRepository.readByPage(offset, limit);
+            newsModels = this.newsRepository.readPage(offset, limit);
         }
 
         List<NewsDTO> newsDTOList = new ArrayList<>();

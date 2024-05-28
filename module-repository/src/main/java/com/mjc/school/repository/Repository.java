@@ -34,7 +34,7 @@ public abstract class Repository <T extends Model> {
      * @param limit number of elements no more than the method should return. If the value of "limit" parameter is -1, all the elements of the dataset will be returned
      * @return list of dataset elements
      */
-    public abstract List<T> readByPage(long offset, long limit);
+    public abstract List<T> readPage(long offset, long limit);
 
     public abstract boolean existsById(Long id) throws KeyNullReferenceException;
     public abstract long count();

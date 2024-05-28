@@ -38,13 +38,7 @@ public class AuthorRepository extends Repository<AuthorModel> {
 
     @Override
     public AuthorModel update(AuthorModel entity) throws EntityNullReferenceException, EntityValidationException {
-        if (entity == null) {
-            throw new EntityNullReferenceException();
-        }
-
-        validateEntity(entity);
-
-        return this.dataSource.save(entity);
+        return this.create(entity);
     }
 
     @Override
@@ -61,7 +55,7 @@ public class AuthorRepository extends Repository<AuthorModel> {
     }
 
     @Override
-    public List<AuthorModel> readByPage(long offset, long limit) {
+    public List<AuthorModel> readPage(long offset, long limit) {
         return this.dataSource.findAll(offset, limit);
     }
 

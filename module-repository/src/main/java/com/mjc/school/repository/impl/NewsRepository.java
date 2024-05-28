@@ -56,7 +56,7 @@ public class NewsRepository extends Repository<NewsModel> {
     }
 
     @Override
-    public List<NewsModel> readByPage(long offset, long limit) {
+    public List<NewsModel> readPage(long offset, long limit) {
         return this.dataSource.findAll(offset, limit);
     }
 
