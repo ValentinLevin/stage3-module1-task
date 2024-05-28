@@ -9,5 +9,5 @@ import java.util.Map;
 public interface AuthorService {
     boolean existsById(Long id) throws AuthorNotFoundServiceException;
     AuthorDTO readById(Long id) throws NullAuthorIdServiceException, AuthorNotFoundServiceException;
-    Map<Long, AuthorDTO> readAll();
+    Map<Long, AuthorDTO> readMap();
 }

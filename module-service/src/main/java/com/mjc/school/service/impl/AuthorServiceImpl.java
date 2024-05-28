@@ -9,12 +9,22 @@ import com.mjc.school.mapper.AuthorMapper;
 import com.mjc.school.model.AuthorModel;
 import com.mjc.school.repository.Repository;
 import com.mjc.school.service.AuthorService;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class AuthorServiceImpl implements AuthorService {
     private final Repository<AuthorModel> authorRepository;
+    private static final Validator validator;
+
+    static {
+        try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
+            validator = factory.getValidator();
+        }
+    }
 
     public AuthorServiceImpl(Repository<AuthorModel> authorRepository) {
         this.authorRepository = authorRepository;
@@ -44,7 +54,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Map<Long, AuthorDTO> readAll()  {
+    public Map<Long, AuthorDTO> readMap()  {
         return this.authorRepository.readAll().stream()
                         .map(AuthorMapper::toAuthorDTO)
                         .collect(Collectors.toMap(AuthorDTO::getId, item -> item));

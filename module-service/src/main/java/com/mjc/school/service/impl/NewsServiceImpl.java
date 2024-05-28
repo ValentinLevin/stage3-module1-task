@@ -128,7 +128,7 @@ class NewsServiceImpl implements NewsService {
 
     @Override
     public List<NewsDTO> readPage(long offset, long limit) throws AuthorNotFoundServiceException {
-        Map<Long, AuthorDTO> authors = this.authorService.readAll();
+        Map<Long, AuthorDTO> authors = this.authorService.readMap();
 
         List<NewsModel> newsModels;
         if (offset == 0 && limit == -1) {
