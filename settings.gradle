@@ -1,1 +1,6 @@
-rootProject.name = 'stage3-module1-task'
+rootProject.name="news-management"
+
+include "module-repository"
+include "module-service"
+include "module-web"
+include "module-main"

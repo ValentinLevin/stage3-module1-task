@@ -1,0 +1,202 @@
+[
+  {
+    "id": 1,
+    "title": "News 1 title",
+    "content": "News 1 content",
+    "createDate": "2024/04/05 14:12:31",
+    "lastUpdateDate": "2024/04/05 14:12:31",
+    "authorId": 1
+  },
+  {
+    "id": 2,
+    "title": "News 2 title",
+    "content": "News 2 content",
+    "createDate": "2024/01/05 14:12:31",
+    "lastUpdateDate": "2024/02/15 04:03:12",
+    "authorId": 2
+  },
+  {
+    "id": 3,
+    "title": "News 3 title",
+    "content": "News 3 content",
+    "createDate": "2024/04/05 14:12:31",
+    "lastUpdateDate": "2024/04/05 14:12:31",
+    "authorId": 1
+  },
+  {
+    "id": 4,
+    "title": "News title 4",
+    "content": "News content 4",
+    "createDate": "2023/06/09 10:34:32",
+    "lastUpdateDate": "2023/06/09 02:01:18",
+    "authorId": 3
+  },
+  {
+    "id": 5,
+    "title": "News title 5",
+    "content": "News content 5",
+    "createDate": "2021/01/16 04:24:12",
+    "lastUpdateDate": "2021/01/16 06:34:42",
+    "authorId": 1
+  },
+  {
+    "id": 6,
+    "title": "News title 6",
+    "content": "News content 6",
+    "createDate": "2022/07/12 11:01:23",
+    "lastUpdateDate": "2022/07/12 05:48:38",
+    "authorId": 1
+  },
+  {
+    "id": 7,
+    "title": "News title 7",
+    "content": "News content 7",
+    "createDate": "2020/04/12 12:53:45",
+    "lastUpdateDate": "2020/04/12 05:13:04",
+    "authorId": 3
+  },
+  {
+    "id": 8,
+    "title": "News title 8",
+    "content": "News content 8",
+    "createDate": "2023/05/06 21:30:24",
+    "lastUpdateDate": "2023/05/06 13:26:22",
+    "authorId": 3
+  },
+  {
+    "id": 9,
+    "title": "News title 9",
+    "content": "News content 9",
+    "createDate": "2023/04/20 08:07:45",
+    "lastUpdateDate": "2023/04/20 01:56:38",
+    "authorId": 1
+  },
+  {
+    "id": 10,
+    "title": "News title 10",
+    "content": "News content 10",
+    "createDate": "2022/01/28 18:31:19",
+    "lastUpdateDate": "2022/01/28 02:37:18",
+    "authorId": 1
+  },
+  {
+    "id": 11,
+    "title": "News title 11",
+    "content": "News content 11",
+    "createDate": "2021/08/03 14:16:18",
+    "lastUpdateDate": "2021/08/03 12:12:18",
+    "authorId": 2
+  },
+  {
+    "id": 12,
+    "title": "News title 12",
+    "content": "News content 12",
+    "createDate": "2021/08/03 05:38:27",
+    "lastUpdateDate": "2021/08/03 22:31:42",
+    "authorId": 1
+  },
+  {
+    "id": 13,
+    "title": "News title 13",
+    "content": "News content 13",
+    "createDate": "2023/09/09 20:18:13",
+    "lastUpdateDate": "2023/09/09 21:24:31",
+    "authorId": 1
+  },
+  {
+    "id": 14,
+    "title": "News title 14",
+    "content": "News content 14",
+    "createDate": "2023/04/07 07:58:22",
+    "lastUpdateDate": "2023/04/07 01:22:07",
+    "authorId": 3
+  },
+  {
+    "id": 15,
+    "title": "News title 15",
+    "content": "News content 15",
+    "createDate": "2021/10/26 20:18:02",
+    "lastUpdateDate": "2021/10/26 09:49:47",
+    "authorId": 1
+  },
+  {
+    "id": 16,
+    "title": "News title 16",
+    "content": "News content 16",
+    "createDate": "2022/05/24 09:23:57",
+    "lastUpdateDate": "2022/05/24 03:07:00",
+    "authorId": 3
+  },
+  {
+    "id": 17,
+    "title": "News title 17",
+    "content": "News content 17",
+    "createDate": "2020/04/14 07:15:18",
+    "lastUpdateDate": "2020/04/14 13:53:46",
+    "authorId": 1
+  },
+  {
+    "id": 18,
+    "title": "News title 18",
+    "content": "News content 18",
+    "createDate": "2020/09/22 21:22:40",
+    "lastUpdateDate": "2020/09/22 09:23:48",
+    "authorId": 2
+  },
+  {
+    "id": 19,
+    "title": "News title 19",
+    "content": "News content 19",
+    "createDate": "2020/05/16 02:15:38",
+    "lastUpdateDate": "2020/05/16 01:40:59",
+    "authorId": 3
+  },
+  {
+    "id": 20,
+    "title": "News title 20",
+    "content": "News content 20",
+    "createDate": "2023/10/04 23:32:01",
+    "lastUpdateDate": "2023/10/04 22:42:56",
+    "authorId": 1
+  },
+  {
+    "id": 21,
+    "title": "News title 21",
+    "content": "News content 21",
+    "createDate": "2020/11/01 05:50:51",
+    "lastUpdateDate": "2020/11/01 11:01:05",
+    "authorId": 1
+  },
+  {
+    "id": 22,
+    "title": "News title 22",
+    "content": "News content 22",
+    "createDate": "2023/12/22 17:34:33",
+    "lastUpdateDate": "2023/12/22 21:13:36",
+    "authorId": 1
+  },
+  {
+    "id": 23,
+    "title": "News title 23",
+    "content": "News content 23",
+    "createDate": "2023/07/25 21:50:24",
+    "lastUpdateDate": "2023/07/25 03:38:02",
+    "authorId": 3
+  },
+  {
+    "id": 24,
+    "title": "News title 24",
+    "content": "News content 24",
+    "createDate": "2020/11/10 18:32:39",
+    "lastUpdateDate": "2020/11/10 00:00:30",
+    "authorId": 2
+  },
+  {
+    "id": 25,
+    "title": "News title 25",
+    "content": "News content 25",
+    "createDate": "2021/02/08 07:04:39",
+    "lastUpdateDate": "2021/02/08 12:59:02",
+    "authorId": 2
+  }
+]

@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'idea'
 }
 
 wrapper {
@@ -13,17 +14,51 @@ subprojects {
     sourceCompatibility = javaVersion
     targetCompatibility = javaVersion
 
+    idea {
+        project {
+            languageLevel = 17
+        }
+
+        module {
+            downloadJavadoc = true
+            downloadSources = true
+        }
+    }
+
     repositories {
         mavenCentral()
     }
 
     dependencies {
-        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+        annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+        compileOnly "org.projectlombok:lombok:${lombokVersion}"
+
+        implementation "org.hibernate.validator:hibernate-validator:${hibernateValidatorVersion}"
+        annotationProcessor "org.hibernate.validator:hibernate-validator-annotation-processor:${hibernateValidatorVersion}"
+        implementation "org.glassfish.expressly:expressly:${expresslyVersion}"
+
+        implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+        implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
+
+        implementation "jakarta.servlet:jakarta.servlet-api:${servletVersion}"
+
+        implementation "org.slf4j:slf4j-api:${slf4jVersion}"
+        testImplementation "org.junit.jupiter:junit-jupiter:${junitVersion}"
+        testImplementation "org.assertj:assertj-core:${assertjVersion}"
+        testImplementation "org.mockito:mockito-core:${mockitoVersion}"
+        testImplementation "org.mockito:mockito-junit-jupiter:${mockitoVersion}"
     }
 
     test {
         useJUnitPlatform()
+    }
+
+    configurations.configureEach {
+        resolutionStrategy {
+            failOnVersionConflict()
+            force("org.slf4j:slf4j-api:${slf4jVersion}")
+            force("net.bytebuddy:byte-buddy:1.14.12")
+        }
     }
 }
 
