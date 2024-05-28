@@ -7,7 +7,7 @@ import com.mjc.school.exception.NullAuthorIdServiceException;
 import java.util.Map;
 
 public interface AuthorService {
-    Boolean existsById(Long id) throws AuthorNotFoundServiceException;
+    boolean existsById(Long id) throws AuthorNotFoundServiceException;
     AuthorDTO readById(Long id) throws NullAuthorIdServiceException, AuthorNotFoundServiceException;
     Map<Long, AuthorDTO> readAll();
 }

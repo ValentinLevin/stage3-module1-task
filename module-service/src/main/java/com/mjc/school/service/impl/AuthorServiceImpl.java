@@ -21,7 +21,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Boolean existsById(Long id) throws AuthorNotFoundServiceException {
+    public boolean existsById(Long id) throws AuthorNotFoundServiceException {
         try {
             return this.authorRepository.existsById(id);
         } catch (KeyNullReferenceException e) {
