@@ -33,7 +33,7 @@ public class NewsServlet extends HttpServlet {
         try {
             int limit = HttpServletRequestUtils.getLimitValueFromRequest(req);
             int offset = HttpServletRequestUtils.getOffsetValueFromRequest(req);
-            List<NewsDTO> news = this.newsService.readAll(offset, limit);
+            List<NewsDTO> news = this.newsService.readPage(offset, limit);
             long totalCount = this.newsService.count();
             responseBody = new GetNewsListResponseDTO(news, offset + 1L, news.size(), totalCount);
             resultCode = RESULT_CODE.SUCCESS;

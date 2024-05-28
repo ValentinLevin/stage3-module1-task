@@ -18,6 +18,8 @@ import java.util.Objects;
 @ToString
 @NoArgsConstructor
 public class EditNewsRequestDTO {
+    private Long id;
+
     @NotEmpty(message = "News title is required")
     @Size(min = 5, message = "The title of the news must be at least 5 characters")
     @Size(max = 30, message = "The title of the news must be no more than 30 characters")

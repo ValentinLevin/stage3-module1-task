@@ -30,7 +30,8 @@ public class NewsItemServlet extends HttpServlet {
         try {
             newsId = HttpServletRequestUtils.getIdFromPath(req);
             EditNewsRequestDTO newsDTO = HttpServletRequestUtils.readObjectFromRequestBody(req, EditNewsRequestDTO.class);
-            NewsDTO editedNewsDTO = newsService.update(newsId, newsDTO);
+            newsDTO.setId(newsId);
+            NewsDTO editedNewsDTO = newsService.update(newsDTO);
             responseBody = new UpdateNewsResponseDTO(editedNewsDTO);
             resultCode = RESULT_CODE.SUCCESS;
         } catch (IllegalNewsIdValueWebException | NotUTFEncodingWebException | NoDataInRequestWebException |

@@ -1,14 +1,14 @@
 package com.mjc.school.service.impl;
 
-import com.mjc.school.exception.CustomRepositoryException;
-import com.mjc.school.exception.EntityNotFoundException;
-import com.mjc.school.model.AuthorModel;
-import com.mjc.school.model.NewsModel;
-import com.mjc.school.repository.Repository;
 import com.mjc.school.dto.AuthorDTO;
 import com.mjc.school.dto.NewsDTO;
+import com.mjc.school.exception.CustomRepositoryException;
 import com.mjc.school.exception.CustomServiceException;
+import com.mjc.school.exception.EntityNotFoundException;
 import com.mjc.school.exception.NewsNotFoundServiceException;
+import com.mjc.school.model.NewsModel;
+import com.mjc.school.repository.Repository;
+import com.mjc.school.service.AuthorService;
 import com.mjc.school.service.NewsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @ExtendWith(MockitoExtension.class)
 class NewsModelServiceTest {
     @Mock
-    private Repository<AuthorModel> authorRepository;
+    private AuthorService authorService;
 
     @Mock
     private Repository<NewsModel> newsRepository;
@@ -36,13 +36,13 @@ class NewsModelServiceTest {
 
     @BeforeEach
     void setUp() {
-        newsService = new NewsServiceImpl(newsRepository, authorRepository);
+        newsService = new NewsServiceImpl(newsRepository, authorService);
     }
 
     @Test
     @DisplayName("Checking the response to a single news request")
     void readById_exists_true() throws CustomServiceException, CustomRepositoryException {
-        AuthorModel authorModel = new AuthorModel(1L, "Author 1 name");
+        AuthorDTO authorDTO = new AuthorDTO(1L, "Author 1 name");
         NewsModel newsModel =
                 new NewsModel(
                         1L,
@@ -53,7 +53,7 @@ class NewsModelServiceTest {
                         1L
                 );
 
-        Mockito.doReturn(authorModel).when(authorRepository).readById(1L);
+        Mockito.doReturn(authorDTO).when(authorService).readById(1L);
         Mockito.doReturn(newsModel).when(newsRepository).readById(1L);
 
         NewsDTO expectedNewsDTO =
@@ -63,7 +63,7 @@ class NewsModelServiceTest {
                         newsModel.getContent(),
                         "2024-04-14T17:10:12",
                         null,
-                        new AuthorDTO(authorModel.getId(), authorModel.getName())
+                        authorDTO
                 );
 
         NewsDTO actualNewsDTO = newsService.readById(1L);

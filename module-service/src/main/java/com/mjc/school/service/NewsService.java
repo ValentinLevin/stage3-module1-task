@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface NewsService {
     NewsDTO create(EditNewsRequestDTO newsDTO) throws DTOValidationServiceException, AuthorNotFoundServiceException, NullAuthorIdServiceException, NewsNotFoundServiceException, NullNewsIdServiceException;
-    NewsDTO update(Long newsId, EditNewsRequestDTO newsDTO) throws DTOValidationServiceException, NullNewsIdServiceException, NewsNotFoundServiceException, NullAuthorIdServiceException, AuthorNotFoundServiceException;
-    NewsDTO readById(long id) throws NullNewsIdServiceException, NewsNotFoundServiceException, NullAuthorIdServiceException, AuthorNotFoundServiceException;
+    NewsDTO update(EditNewsRequestDTO newsDTO) throws DTOValidationServiceException, NullNewsIdServiceException, NewsNotFoundServiceException, NullAuthorIdServiceException, AuthorNotFoundServiceException;
+    NewsDTO readById(Long id) throws NullNewsIdServiceException, NewsNotFoundServiceException, NullAuthorIdServiceException, AuthorNotFoundServiceException;
     List<NewsDTO> readAll() throws AuthorNotFoundServiceException;
 
     /**
@@ -17,7 +17,7 @@ public interface NewsService {
      * @param limit number of news no more than the method should return. If the value of "limit" parameter is -1, all the news items of the dataset will be returned
      * @return list of news
      */
-    List<NewsDTO> readAll(long offset, long limit) throws AuthorNotFoundServiceException;
-    boolean deleteById(long id) throws NullNewsIdServiceException, NewsNotFoundServiceException;
+    List<NewsDTO> readPage(long offset, long limit) throws AuthorNotFoundServiceException;
+    Boolean deleteById(Long id) throws NullNewsIdServiceException, NewsNotFoundServiceException;
     long count();
 }

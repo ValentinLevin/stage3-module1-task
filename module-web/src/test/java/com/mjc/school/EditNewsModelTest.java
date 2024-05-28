@@ -63,6 +63,7 @@ class EditNewsModelTest {
                 "News content",
                 12L
         );
+        expectedRequestDTO.setId(idForUpdate);
 
         NewsDTO newsDTO = new NewsDTO(
                 idForUpdate,
@@ -75,19 +76,16 @@ class EditNewsModelTest {
         );
 
         Mockito.when(request.getPathInfo()).thenReturn(String.valueOf(idForUpdate));
-        Mockito.when(newsService.update(Mockito.any(), Mockito.any())).thenReturn(newsDTO);
+        Mockito.when(newsService.update(Mockito.any())).thenReturn(newsDTO);
 
         new NewsItemServlet(newsService).service(request, response);
 
         ArgumentCaptor<EditNewsRequestDTO> editNewsRequestDTOArgumentCaptor = ArgumentCaptor.forClass(EditNewsRequestDTO.class);
-        ArgumentCaptor<Long> idArgumentCaptor = ArgumentCaptor.forClass(Long.class);
-        Mockito.verify(newsService).update(idArgumentCaptor.capture(), editNewsRequestDTOArgumentCaptor.capture());
+        Mockito.verify(newsService).update(editNewsRequestDTOArgumentCaptor.capture());
 
         EditNewsRequestDTO actualRequestDTO = editNewsRequestDTOArgumentCaptor.getValue();
-        long actualIdForUpdate = idArgumentCaptor.getValue();
 
         assertThat(actualRequestDTO).isEqualTo(expectedRequestDTO);
-        assertThat(actualIdForUpdate).isEqualTo(idForUpdate);
 
         Mockito.verify(response).setStatus(HttpServletResponse.SC_OK);
 
@@ -125,7 +123,7 @@ class EditNewsModelTest {
 
         Mockito.when(request.getPathInfo()).thenReturn(String.valueOf(idForUpdate));
         NewsNotFoundServiceException expectedServiceException = new NewsNotFoundServiceException(idForUpdate);
-        Mockito.when(newsService.update(Mockito.any(), Mockito.any())).thenThrow(expectedServiceException);
+        Mockito.when(newsService.update(Mockito.any())).thenThrow(expectedServiceException);
 
         RESULT_CODE expectedResultCode = ResultCodeMapper.getResultCode(NewsNotFoundServiceException.class);
 
@@ -159,7 +157,7 @@ class EditNewsModelTest {
         Mockito.when(request.getReader()).thenReturn(reader);
         Mockito.when(request.getPathInfo()).thenReturn(String.valueOf(idForUpdate));
         AuthorNotFoundServiceException authorNotFoundServiceException = new AuthorNotFoundServiceException(12);
-        Mockito.when(newsService.update(Mockito.any(), Mockito.any())).thenThrow(authorNotFoundServiceException);
+        Mockito.when(newsService.update(Mockito.any())).thenThrow(authorNotFoundServiceException);
 
         RESULT_CODE expectedResultCode = ResultCodeMapper.getResultCode(AuthorNotFoundServiceException.class);
 
@@ -185,7 +183,7 @@ class EditNewsModelTest {
         Mockito.when(request.getReader()).thenReturn(reader);
         Mockito.when(request.getPathInfo()).thenReturn(String.valueOf(idForUpdate));
         DTOValidationServiceException validationException = new DTOValidationServiceException("Validation exceptions");
-        Mockito.when(newsService.update(Mockito.any(), Mockito.any())).thenThrow(validationException);
+        Mockito.when(newsService.update(Mockito.any())).thenThrow(validationException);
 
         RESULT_CODE expectedResultCode = ResultCodeMapper.getResultCode(DTOValidationServiceException.class);
 
@@ -235,7 +233,7 @@ class EditNewsModelTest {
 
         Mockito.when(request.getReader()).thenReturn(reader);
         Mockito.when(request.getPathInfo()).thenReturn(String.valueOf(idForUpdate));
-        Mockito.when(newsService.update(Mockito.any(), Mockito.any())).thenThrow(new RuntimeException("runtime"));
+        Mockito.when(newsService.update(Mockito.any())).thenThrow(new RuntimeException("runtime"));
 
         CustomWebRuntimeException expectedException = new CustomWebRuntimeException();
 

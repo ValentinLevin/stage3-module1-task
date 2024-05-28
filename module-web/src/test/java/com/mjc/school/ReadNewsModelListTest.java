@@ -74,7 +74,7 @@ class ReadNewsModelListTest {
         PrintWriter printWriter = new PrintWriter(responseBodyStream);
         Mockito.when(response.getWriter()).thenReturn(printWriter);
 
-        Mockito.when(newsService.readAll(Mockito.anyLong(), Mockito.anyLong())).thenReturn(news);
+        Mockito.when(newsService.readPage(Mockito.anyLong(), Mockito.anyLong())).thenReturn(news);
         Mockito.when(newsService.count()).thenReturn(10L);
     }
 
@@ -108,7 +108,7 @@ class ReadNewsModelListTest {
 
         new NewsServlet(newsService).service(request, response);
 
-        Mockito.verify(newsService).readAll(offset, limit);
+        Mockito.verify(newsService).readPage(offset, limit);
 
         GetNewsListResponseDTO actualResponseBody = mapper.readValue(responseBodyStream.toByteArray(), GetNewsListResponseDTO.class);
 

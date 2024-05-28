@@ -2,9 +2,9 @@ package com.mjc.school.service.impl;
 
 import com.mjc.school.dto.EditNewsRequestDTO;
 import com.mjc.school.exception.*;
-import com.mjc.school.model.AuthorModel;
 import com.mjc.school.model.NewsModel;
 import com.mjc.school.repository.Repository;
+import com.mjc.school.service.AuthorService;
 import com.mjc.school.service.NewsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class NewsServiceUpdateNewsModelTest {
     @Mock
-    private Repository<AuthorModel> authorRepository;
+    private AuthorService authorService;
 
     @Mock
     private Repository<NewsModel> newsRepository;
@@ -34,7 +34,7 @@ class NewsServiceUpdateNewsModelTest {
 
     @BeforeEach
     void setUp() {
-        newsService = new NewsServiceImpl(newsRepository, authorRepository);
+        newsService = new NewsServiceImpl(newsRepository, authorService);
     }
 
     @Test
@@ -48,6 +48,8 @@ class NewsServiceUpdateNewsModelTest {
 
         Long newsIdToChange = 2L;
 
+        requestDTO.setId(newsIdToChange);
+
         NewsModel newsModelBeforeChange = new NewsModel(
                 newsIdToChange,
                 "Start title",
@@ -66,14 +68,14 @@ class NewsServiceUpdateNewsModelTest {
                 requestDTO.getAuthorId()
         );
 
-        Mockito.when(authorRepository.existsById(requestDTO.getAuthorId())).thenReturn(true);
+        Mockito.when(authorService.existsById(requestDTO.getAuthorId())).thenReturn(true);
         Mockito.when(newsRepository.readById(newsIdToChange)).thenReturn(newsModelBeforeChange);
         Mockito.when(newsRepository.update(Mockito.any(NewsModel.class))).thenReturn(newsModelAfterChange);
 
         ArgumentCaptor<NewsModel> argumentCaptor = ArgumentCaptor.forClass(NewsModel.class);
 
         LocalDateTime updateDateTimeFrom = LocalDateTime.now();
-        newsService.update(newsIdToChange, requestDTO);
+        newsService.update(requestDTO);
         LocalDateTime updateDateTimeTo = LocalDateTime.now();
 
         Mockito.verify(newsRepository).update(argumentCaptor.capture());
@@ -87,7 +89,7 @@ class NewsServiceUpdateNewsModelTest {
 
     @Test
     @DisplayName("Cases of correctness of news data. No exception should be thrown")
-    void correctData_noThrownExceptions() throws CustomRepositoryException {
+    void correctData_noThrownExceptions() throws CustomRepositoryException, CustomServiceException {
         Long newsIdForChange = 1L;
 
         EditNewsRequestDTO requestDTO = new EditNewsRequestDTO(
@@ -95,6 +97,8 @@ class NewsServiceUpdateNewsModelTest {
                 "54321",
                 1L
         );
+
+        requestDTO.setId(newsIdForChange);
 
         NewsModel newsModelBeforeChange = new NewsModel(
                 newsIdForChange,
@@ -114,11 +118,11 @@ class NewsServiceUpdateNewsModelTest {
                 requestDTO.getAuthorId()
         );
 
-        Mockito.when(authorRepository.existsById(requestDTO.getAuthorId())).thenReturn(true);
+        Mockito.when(authorService.existsById(requestDTO.getAuthorId())).thenReturn(true);
         Mockito.when(newsRepository.readById(newsIdForChange)).thenReturn(newsModelBeforeChange);
         Mockito.when(newsRepository.update(Mockito.any(NewsModel.class))).thenReturn(newsModelAfterChange);
 
-        assertThatNoException().isThrownBy(() -> newsService.update(newsIdForChange, requestDTO));
+        assertThatNoException().isThrownBy(() -> newsService.update(requestDTO));
 
         requestDTO.setTitle("123456789012345678901234567890");
         requestDTO.setContent(
@@ -127,7 +131,7 @@ class NewsServiceUpdateNewsModelTest {
                 "1234567890123456789012345678901234567890123456789012345"
         );
 
-        assertThatNoException().isThrownBy(() -> newsService.update(newsIdForChange, requestDTO));
+        assertThatNoException().isThrownBy(() -> newsService.update(requestDTO));
     }
 
     static Stream<EditNewsRequestDTO> dataForDTOValidateTest() {
@@ -150,20 +154,21 @@ class NewsServiceUpdateNewsModelTest {
     @ParameterizedTest()
     @MethodSource("dataForDTOValidateTest")
     void update_titleTooShort_throwsDTOValidateException(EditNewsRequestDTO request) {
-        assertThatThrownBy(() -> newsService.update(1L, request)).isInstanceOf(DTOValidationServiceException.class);
+        assertThatThrownBy(() -> newsService.update(request)).isInstanceOf(DTOValidationServiceException.class);
     }
 
     @Test
     @DisplayName("When passing an incorrect id for a new author, an AuthorNotFoundException will be thrown")
-    void update_notFoundNewAuthor_throwsDTOValidateException() throws CustomRepositoryException {
+    void update_notFoundNewAuthor_throwsDTOValidateException() throws CustomServiceException {
         Long newsIdForUpdate = 1L;
         EditNewsRequestDTO requestDTO = new EditNewsRequestDTO(
                 "News title",
                 "News content",
                 2L
         );
-        Mockito.when(authorRepository.existsById(requestDTO.getAuthorId())).thenReturn(false);
-        assertThatThrownBy(() -> newsService.update(newsIdForUpdate, requestDTO)).isInstanceOf(AuthorNotFoundServiceException.class);
+        requestDTO.setId(newsIdForUpdate);
+        Mockito.when(authorService.existsById(requestDTO.getAuthorId())).thenReturn(false);
+        assertThatThrownBy(() -> newsService.update(requestDTO)).isInstanceOf(AuthorNotFoundServiceException.class);
     }
 
     @Test
@@ -175,7 +180,8 @@ class NewsServiceUpdateNewsModelTest {
                 "News content",
                 2L
         );
+        requestDTO.setId(newsIdForUpdate);
         Mockito.when(newsRepository.readById(newsIdForUpdate)).thenThrow(EntityNotFoundException.class);
-        assertThatThrownBy(() -> newsService.update(newsIdForUpdate, requestDTO)).isInstanceOf(NewsNotFoundServiceException.class);
+        assertThatThrownBy(() -> newsService.update(requestDTO)).isInstanceOf(NewsNotFoundServiceException.class);
     }
 }

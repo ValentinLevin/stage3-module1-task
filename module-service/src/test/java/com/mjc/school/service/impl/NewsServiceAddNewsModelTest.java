@@ -1,12 +1,14 @@
 package com.mjc.school.service.impl;
 
+import com.mjc.school.dto.AuthorDTO;
 import com.mjc.school.dto.EditNewsRequestDTO;
 import com.mjc.school.exception.AuthorNotFoundServiceException;
 import com.mjc.school.exception.CustomRepositoryException;
+import com.mjc.school.exception.CustomServiceException;
 import com.mjc.school.exception.DTOValidationServiceException;
-import com.mjc.school.model.AuthorModel;
 import com.mjc.school.model.NewsModel;
 import com.mjc.school.repository.Repository;
+import com.mjc.school.service.AuthorService;
 import com.mjc.school.service.NewsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -29,7 +31,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @ExtendWith(MockitoExtension.class)
 class NewsServiceAddNewsModelTest {
     @Mock()
-    private Repository<AuthorModel> authorRepository;
+    private AuthorService authorService;
 
     @Mock()
     private Repository<NewsModel> newsRepository;
@@ -38,23 +40,23 @@ class NewsServiceAddNewsModelTest {
 
     @BeforeEach
     void setUp() {
-        newsService = new NewsServiceImpl(newsRepository, authorRepository);
+        newsService = new NewsServiceImpl(newsRepository, authorService);
     }
 
     @Test
     @DisplayName("When the added news contains an author who is not in the list of authors, the method will throw an AuthorNotFoundException exception")
-    void create_incorrectData_throwsAuthorNotExistsException() throws CustomRepositoryException {
+    void create_incorrectData_throwsAuthorNotExistsException() throws CustomServiceException {
         EditNewsRequestDTO requestDTO = new EditNewsRequestDTO(
                 "News title",
                 "News content",
                 2L
         );
-        Mockito.when(authorRepository.existsById(2L)).thenReturn(false);
+        Mockito.when(authorService.existsById(2L)).thenReturn(false);
         assertThatThrownBy(() -> newsService.create(requestDTO)).isInstanceOf(AuthorNotFoundServiceException.class);
     }
     @Test
     @DisplayName("Cases of correctness of news data. No exception should be thrown")
-    void correctData_noThrownExceptions() throws CustomRepositoryException {
+    void correctData_noThrownExceptions() throws CustomServiceException, CustomRepositoryException {
         EditNewsRequestDTO requestDTO = new EditNewsRequestDTO(
                 "12345",
                 "54321",
@@ -70,12 +72,12 @@ class NewsServiceAddNewsModelTest {
                 requestDTO.getAuthorId()
         );
 
-        AuthorModel authorModel = new AuthorModel(
+        AuthorDTO authorDTO = new AuthorDTO(
                 1L, "Author name"
         );
 
-        Mockito.when(authorRepository.existsById(requestDTO.getAuthorId())).thenReturn(true);
-        Mockito.when(authorRepository.readById(authorModel.getId())).thenReturn(authorModel);
+        Mockito.when(authorService.existsById(requestDTO.getAuthorId())).thenReturn(true);
+        Mockito.when(authorService.readById(authorDTO.getId())).thenReturn(authorDTO);
 
         Mockito.when(newsRepository.create(Mockito.any(NewsModel.class))).thenReturn(addedNewsModel);
         Mockito.when(newsRepository.readById(addedNewsModel.getId())).thenReturn(addedNewsModel);

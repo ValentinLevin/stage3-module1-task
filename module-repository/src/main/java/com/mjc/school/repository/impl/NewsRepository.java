@@ -5,7 +5,6 @@ import com.mjc.school.exception.EntityNotFoundException;
 import com.mjc.school.exception.EntityNullReferenceException;
 import com.mjc.school.exception.EntityValidationException;
 import com.mjc.school.exception.KeyNullReferenceException;
-import com.mjc.school.model.AuthorModel;
 import com.mjc.school.model.NewsModel;
 import com.mjc.school.repository.Repository;
 
