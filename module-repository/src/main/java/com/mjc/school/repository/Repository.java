@@ -1,6 +1,5 @@
 package com.mjc.school.repository;
 
-import com.mjc.school.datasource.DataSource;
 import com.mjc.school.exception.EntityNotFoundException;
 import com.mjc.school.exception.EntityNullReferenceException;
 import com.mjc.school.exception.EntityValidationException;
@@ -16,17 +15,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public abstract class Repository <T extends Model> {
-    protected final DataSource<T> dataSource;
     protected static final Validator validator;
 
     static {
         try(ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory()) {
             validator = validatorFactory.getValidator();
         }
-    }
-
-    protected Repository(DataSource<T> dataSource) {
-        this.dataSource = dataSource;
     }
 
     public abstract T readById(Long id) throws KeyNullReferenceException, EntityNotFoundException;
@@ -40,7 +34,7 @@ public abstract class Repository <T extends Model> {
      * @param limit number of elements no more than the method should return. If the value of "limit" parameter is -1, all the elements of the dataset will be returned
      * @return list of dataset elements
      */
-    public abstract List<T> readAllByPage(long offset, long limit);
+    public abstract List<T> readByPage(long offset, long limit);
 
     public abstract boolean existsById(Long id) throws KeyNullReferenceException;
     public abstract long count();

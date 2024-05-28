@@ -11,8 +11,10 @@ import com.mjc.school.repository.Repository;
 import java.util.List;
 
 public class AuthorRepository extends Repository<AuthorModel> {
+    private final DataSource<AuthorModel> dataSource;
+
     public AuthorRepository(DataSource<AuthorModel> dataSource) {
-        super(dataSource);
+        this.dataSource = dataSource;
     }
 
     @Override
@@ -59,7 +61,7 @@ public class AuthorRepository extends Repository<AuthorModel> {
     }
 
     @Override
-    public List<AuthorModel> readAllByPage(long offset, long limit) {
+    public List<AuthorModel> readByPage(long offset, long limit) {
         return this.dataSource.findAll(offset, limit);
     }
 

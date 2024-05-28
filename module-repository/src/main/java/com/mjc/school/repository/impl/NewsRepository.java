@@ -5,14 +5,17 @@ import com.mjc.school.exception.EntityNotFoundException;
 import com.mjc.school.exception.EntityNullReferenceException;
 import com.mjc.school.exception.EntityValidationException;
 import com.mjc.school.exception.KeyNullReferenceException;
+import com.mjc.school.model.AuthorModel;
 import com.mjc.school.model.NewsModel;
 import com.mjc.school.repository.Repository;
 
 import java.util.List;
 
 public class NewsRepository extends Repository<NewsModel> {
+    private final DataSource<NewsModel> dataSource;
+
     public NewsRepository(DataSource<NewsModel> dataSource) {
-        super(dataSource);
+        this.dataSource = dataSource;
     }
 
     @Override
@@ -36,13 +39,7 @@ public class NewsRepository extends Repository<NewsModel> {
 
     @Override
     public NewsModel update(NewsModel entity) throws EntityNullReferenceException, EntityValidationException {
-        if (entity == null) {
-            throw new EntityNullReferenceException();
-        }
-
-        validateEntity(entity);
-
-        return this.dataSource.save(entity);
+        return this.create(entity);
     }
 
     @Override
@@ -59,7 +56,7 @@ public class NewsRepository extends Repository<NewsModel> {
     }
 
     @Override
-    public List<NewsModel> readAllByPage(long offset, long limit) {
+    public List<NewsModel> readByPage(long offset, long limit) {
         return this.dataSource.findAll(offset, limit);
     }
 
