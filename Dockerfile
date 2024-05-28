@@ -15,6 +15,6 @@ RUN ./gradlew build
 
 FROM bellsoft/liberica-openjre-alpine-musl:17-cds
 WORKDIR app
-COPY --from=builder /app/module-main/build/libs/module-main-*-all.jar ./news-management.jar
+COPY --from=builder /app/module-main/build/libs/module-main-*-all.jar ./newsModel-management.jar
 EXPOSE 8083
-ENTRYPOINT ["java", "-jar", "./news-management.jar"]
+ENTRYPOINT ["java", "-jar", "./newsModel-management.jar"]

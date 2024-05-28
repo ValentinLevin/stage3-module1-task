@@ -25,7 +25,7 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-class ReadNewsListTest {
+class ReadNewsModelListTest {
     private NewsService newsService;
     private HttpServletRequest request;
     private HttpServletResponse response;

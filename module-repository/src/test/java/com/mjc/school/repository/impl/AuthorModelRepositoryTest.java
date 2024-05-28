@@ -5,7 +5,7 @@ import com.mjc.school.exception.CustomRepositoryException;
 import com.mjc.school.exception.EntityNullReferenceException;
 import com.mjc.school.exception.EntityValidationException;
 import com.mjc.school.exception.KeyNullReferenceException;
-import com.mjc.school.model.Author;
+import com.mjc.school.model.AuthorModel;
 import com.mjc.school.repository.Repository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,10 +20,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DisplayName("AuthorRepository")
 @ExtendWith(MockitoExtension.class)
-class AuthorRepositoryTest {
+class AuthorModelRepositoryTest {
     @Mock(strictness = Mock.Strictness.LENIENT)
-    private DataSource<Author> dataSource;
-    private Repository<Author> repository;
+    private DataSource<AuthorModel> dataSource;
+    private Repository<AuthorModel> repository;
 
     @BeforeEach
     void setup() {
@@ -33,12 +33,12 @@ class AuthorRepositoryTest {
     @Test
     @DisplayName("When requesting the author by id, the required dataSource method was called")
     void readById_foundEntity() throws CustomRepositoryException {
-        Author expectedAuthor = new Author(1L, "Author 1 name");
-        Mockito.when(dataSource.findById(1L)).thenReturn(expectedAuthor);
+        AuthorModel expectedAuthorModel = new AuthorModel(1L, "Author 1 name");
+        Mockito.when(dataSource.findById(1L)).thenReturn(expectedAuthorModel);
 
-        Author actualAuthor = this.repository.readById(1L);
+        AuthorModel actualAuthorModel = this.repository.readById(1L);
 
-        assertThat(actualAuthor).isEqualTo(expectedAuthor);
+        assertThat(actualAuthorModel).isEqualTo(expectedAuthorModel);
         Mockito.verify(dataSource, Mockito.only()).findById(1L);
         Mockito.verify(dataSource, Mockito.times(1)).findById(1L);
     }
@@ -46,13 +46,13 @@ class AuthorRepositoryTest {
     @Test
     @DisplayName("When a deletion request is made, the required dataSource method will be called")
     void delete_ByEntity() throws CustomRepositoryException {
-        Author authorForDelete = new Author(1L, "Author 1 name");
+        AuthorModel authorModelForDelete = new AuthorModel(1L, "Author 1 name");
         Mockito.doReturn(true).when(dataSource).delete(1L);
 
-        this.repository.delete(authorForDelete);
+        this.repository.delete(authorModelForDelete.getId());
 
-        Mockito.verify(dataSource, Mockito.only()).delete(authorForDelete.getId());
-        Mockito.verify(dataSource, Mockito.times(1)).delete(authorForDelete.getId());
+        Mockito.verify(dataSource, Mockito.only()).delete(authorModelForDelete.getId());
+        Mockito.verify(dataSource, Mockito.times(1)).delete(authorModelForDelete.getId());
     }
 
     @Test
@@ -74,28 +74,22 @@ class AuthorRepositoryTest {
     }
 
     @Test
-    @DisplayName("When passing null as an object to the deletion method, an EntityNullReferenceException exception will be thrown")
-    void delete_ByNullEntity_throwsEntityNullReferenceException() {
-        assertThatThrownBy(() -> repository.delete(null)).isInstanceOf(EntityNullReferenceException.class);
-    }
-
-    @Test
     @DisplayName("When passing null as a key to the key deletion method, a KeyNullReferenceException exception will be thrown")
     void delete_ByNullKey_throwsKeyNullReferenceException() {
-        assertThatThrownBy(() -> repository.deleteById(null)).isInstanceOf(KeyNullReferenceException.class);
+        assertThatThrownBy(() -> repository.delete(null)).isInstanceOf(KeyNullReferenceException.class);
     }
 
     @Test
     void create_authorNameTooSmall_throwsEntityValidationException() throws CustomRepositoryException {
-        Author author = new Author(1L, "12");
-        Mockito.doReturn(author).when(dataSource).save(author);
-        assertThatThrownBy(() -> repository.create(author)).isInstanceOf(EntityValidationException.class);
+        AuthorModel authorModel = new AuthorModel(1L, "12");
+        Mockito.doReturn(authorModel).when(dataSource).save(authorModel);
+        assertThatThrownBy(() -> repository.create(authorModel)).isInstanceOf(EntityValidationException.class);
     }
 
     @Test
     void update_authorNameTooSmall_throwsEntityValidationException() throws CustomRepositoryException {
-        Author author = new Author(1L, "12");
-        Mockito.doReturn(author).when(dataSource).save(author);
-        assertThatThrownBy(() -> repository.update(author)).isInstanceOf(EntityValidationException.class);
+        AuthorModel authorModel = new AuthorModel(1L, "12");
+        Mockito.doReturn(authorModel).when(dataSource).save(authorModel);
+        assertThatThrownBy(() -> repository.update(authorModel)).isInstanceOf(EntityValidationException.class);
     }
 }

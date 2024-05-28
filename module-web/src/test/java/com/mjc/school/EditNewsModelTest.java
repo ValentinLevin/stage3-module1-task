@@ -21,7 +21,7 @@ import java.io.*;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-class EditNewsTest {
+class EditNewsModelTest {
     private HttpServletRequest request;
     private HttpServletResponse response;
     private NewsService newsService;

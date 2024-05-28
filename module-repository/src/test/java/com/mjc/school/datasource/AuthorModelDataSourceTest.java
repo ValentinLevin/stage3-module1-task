@@ -2,7 +2,7 @@ package com.mjc.school.datasource;
 
 import com.mjc.school.exception.CustomRepositoryException;
 import com.mjc.school.exception.EntityNotFoundException;
-import com.mjc.school.model.Author;
+import com.mjc.school.model.AuthorModel;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -15,22 +15,22 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.tuple;
 
 @DisplayName("AuthorDataSource")
-class AuthorDataSourceTest {
-    private static final DataSource<Author> dataSource = DataSourceFactory.getDataSource(Author.class);
-    private static final List<Author> readItems = dataSource.findAll();
+class AuthorModelDataSourceTest {
+    private static final DataSource<AuthorModel> dataSource = DataSourceFactory.getDataSource(AuthorModel.class);
+    private static final List<AuthorModel> readItems = dataSource.findAll();
 
     private Long findRandomId() {
         Random random = new Random(System.currentTimeMillis());
-        List<Author> authors = dataSource.findAll();
-        return authors.get(random.nextInt(authors.size())).getId();
+        List<AuthorModel> authorModels = dataSource.findAll();
+        return authorModels.get(random.nextInt(authorModels.size())).getId();
     }
 
     @Test
     @DisplayName("The data from the file was read correctly")
     void readDataFromFile_firstAuthorDataHasBeenLoaded_True() {
-        Author expectedAuthorData = new Author(1L, "Author 1 name");
-        Optional<Author> actualAuthorData = readItems.stream().filter(item -> item.getId() == 1L).findFirst();
-        assertThat(actualAuthorData).isPresent().contains(expectedAuthorData);
+        AuthorModel expectedAuthorModelData = new AuthorModel(1L, "Author 1 name");
+        Optional<AuthorModel> actualAuthorData = readItems.stream().filter(item -> item.getId() == 1L).findFirst();
+        assertThat(actualAuthorData).isPresent().contains(expectedAuthorModelData);
         assertThat(readItems)
                 .extracting("id", "name")
                 .containsOnly(tuple(1L, "Author 1 name"), tuple(2L, "Author 2 name"), tuple(3L, "Author 3 name"));
@@ -61,8 +61,8 @@ class AuthorDataSourceTest {
     void save_add_NumberOfRecordIncreasedByOneAfterAddingTheEntity_true() throws CustomRepositoryException {
         long expectedAuthorCount = dataSource.count()+1;
 
-        Author newAuthor = new Author("New Author");
-        dataSource.save(newAuthor);
+        AuthorModel newAuthorModel = new AuthorModel("New Author");
+        dataSource.save(newAuthorModel);
 
         assertThat(dataSource.count()).isEqualTo(expectedAuthorCount);
     }
@@ -70,11 +70,11 @@ class AuthorDataSourceTest {
     @Test
     @DisplayName("After adding a new entity, the author's data obtained from the dataSource is equal to the added data")
     void save_add_newAuthorHasBeenAddedIntoDataSource() throws CustomRepositoryException {
-        Author newAuthor = new Author("New Author");
-        Author addedAuthor = dataSource.save(newAuthor);
-        Author newAuthorDataReceivedFromDataSource = dataSource.findById(addedAuthor.getId());
+        AuthorModel newAuthorModel = new AuthorModel("New Author");
+        AuthorModel addedAuthorModel = dataSource.save(newAuthorModel);
+        AuthorModel newAuthorModelDataReceivedFromDataSource = dataSource.findById(addedAuthorModel.getId());
 
-        assertThat(newAuthor.getName()).isEqualTo(newAuthorDataReceivedFromDataSource.getName());
+        assertThat(newAuthorModel.getName()).isEqualTo(newAuthorModelDataReceivedFromDataSource.getName());
     }
 
     @Test
@@ -82,12 +82,12 @@ class AuthorDataSourceTest {
     void save_update_OnSavingAndFetchingNewInstanceOfEntityCreatedNotDependOfEachOther_true() throws CustomRepositoryException {
         Long idForCheck = findRandomId();
 
-        Author firstFetchEntity = dataSource.findById(idForCheck);
-        Author secondFetchEntity_ForChange = dataSource.findById(idForCheck);
+        AuthorModel firstFetchEntity = dataSource.findById(idForCheck);
+        AuthorModel secondFetchEntity_ForChange = dataSource.findById(idForCheck);
 
         secondFetchEntity_ForChange.setName("Change author name");
 
-        Author actualEntity = dataSource.findById(idForCheck);
+        AuthorModel actualEntity = dataSource.findById(idForCheck);
 
         assertThat(actualEntity)
                 .isNotSameAs(firstFetchEntity)
@@ -101,17 +101,17 @@ class AuthorDataSourceTest {
     @DisplayName("After saving the changes to the entity in the dataSource, the data is returned changed when the request is repeated")
     void save_update_savedEntityIsEqualsToFetchedEntity_true() throws CustomRepositoryException {
         Long idForFetch = findRandomId();
-        Author expectedAuthor = dataSource.findById(idForFetch);
+        AuthorModel expectedAuthorModel = dataSource.findById(idForFetch);
 
-        expectedAuthor.setName("Changed author name");
+        expectedAuthorModel.setName("Changed author name");
 
-        dataSource.save(expectedAuthor);
+        dataSource.save(expectedAuthorModel);
 
-        Author actualAuthor = dataSource.findById(expectedAuthor.getId());
+        AuthorModel actualAuthorModel = dataSource.findById(expectedAuthorModel.getId());
 
-        assertThat(actualAuthor)
-                .isNotSameAs(expectedAuthor)
-                .isEqualTo(expectedAuthor);
+        assertThat(actualAuthorModel)
+                .isNotSameAs(expectedAuthorModel)
+                .isEqualTo(expectedAuthorModel);
     }
 
     @Test
@@ -124,8 +124,8 @@ class AuthorDataSourceTest {
     @DisplayName("If you try to search for an existing id, an entity with the corresponding id will be returned")
     void findById_found() throws CustomRepositoryException {
         Long idForFetch = findRandomId();
-        Author author = dataSource.findById(idForFetch);
-        assertThat(author).isNotNull().extracting("id").isEqualTo(author.getId());
+        AuthorModel authorModel = dataSource.findById(idForFetch);
+        assertThat(authorModel).isNotNull().extracting("id").isEqualTo(authorModel.getId());
     }
 
     @Test

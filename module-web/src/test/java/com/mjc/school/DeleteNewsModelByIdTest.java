@@ -24,7 +24,7 @@ import java.io.PrintWriter;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-class DeleteNewsByIdTest {
+class DeleteNewsModelByIdTest {
     private HttpServletRequest request;
     private HttpServletResponse response;
     private NewsService newsService;

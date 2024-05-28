@@ -5,7 +5,7 @@ import com.mjc.school.exception.CustomRepositoryException;
 import com.mjc.school.exception.EntityNullReferenceException;
 import com.mjc.school.exception.EntityValidationException;
 import com.mjc.school.exception.KeyNullReferenceException;
-import com.mjc.school.model.News;
+import com.mjc.school.model.NewsModel;
 import com.mjc.school.repository.Repository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,10 +22,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DisplayName("NewsRepository")
 @ExtendWith(MockitoExtension.class)
-class NewsRepositoryTest {
+class NewsModelRepositoryTest {
     @Mock
-    private DataSource<News> dataSource;
-    private Repository<News> repository;
+    private DataSource<NewsModel> dataSource;
+    private Repository<NewsModel> repository;
 
     @BeforeEach
     void setup() {
@@ -35,8 +35,8 @@ class NewsRepositoryTest {
     @Test
     @DisplayName("When requesting news by id, the required dataSource method was called")
     void readById_foundEntity() throws CustomRepositoryException {
-        News expectedNews =
-                new News(
+        NewsModel expectedNewsModel =
+                new NewsModel(
                         1L,
                         "News 1 name",
                         "News 1 content",
@@ -44,11 +44,11 @@ class NewsRepositoryTest {
                         LocalDateTime.of(2024, 4, 12, 12, 14, 37),
                         1L
                 );
-        Mockito.when(dataSource.findById(1L)).thenReturn(expectedNews);
+        Mockito.when(dataSource.findById(1L)).thenReturn(expectedNewsModel);
 
-        News actualNews = this.repository.readById(1L);
+        NewsModel actualNewsModel = this.repository.readById(1L);
 
-        assertThat(actualNews).isEqualTo(expectedNews);
+        assertThat(actualNewsModel).isEqualTo(expectedNewsModel);
         Mockito.verify(dataSource, Mockito.only()).findById(1L);
         Mockito.verify(dataSource, Mockito.times(1)).findById(1L);
     }
@@ -56,8 +56,8 @@ class NewsRepositoryTest {
     @Test
     @DisplayName("When a deletion request is made, the required dataSource method will be called")
     void delete_ByEntity() throws CustomRepositoryException {
-        News newsForDelete =
-                new News(
+        NewsModel newsModelForDelete =
+                new NewsModel(
                         1L,
                         "News 1 name",
                         "News 1 content",
@@ -67,12 +67,12 @@ class NewsRepositoryTest {
                 );
         Mockito.doReturn(true).when(dataSource).delete(1L);
 
-        boolean actualDeleteResult = this.repository.delete(newsForDelete);
+        boolean actualDeleteResult = this.repository.delete(newsModelForDelete.getId());
 
         assertThat(actualDeleteResult).isTrue();
 
-        Mockito.verify(dataSource, Mockito.only()).delete(newsForDelete.getId());
-        Mockito.verify(dataSource, Mockito.times(1)).delete(newsForDelete.getId());
+        Mockito.verify(dataSource, Mockito.only()).delete(newsModelForDelete.getId());
+        Mockito.verify(dataSource, Mockito.times(1)).delete(newsModelForDelete.getId());
     }
 
     @Test
@@ -94,21 +94,15 @@ class NewsRepositoryTest {
     }
 
     @Test
-    @DisplayName("When passing null as an entity to be deleted, an EntityNullReferenceException exception will be thrown to the deletion method")
-    void delete_ByNullEntity_throwsEntityNullReferenceException() {
-        assertThatThrownBy(() -> repository.delete(null)).isInstanceOf(EntityNullReferenceException.class);
-    }
-
-    @Test
     @DisplayName("When passing null as a key to the key deletion method, a KeyNullReferenceException exception will be thrown")
     void delete_ByNullKey_throwsKeyNullReferenceException() {
-        assertThatThrownBy(() -> repository.deleteById(null)).isInstanceOf(KeyNullReferenceException.class);
+        assertThatThrownBy(() -> repository.delete(null)).isInstanceOf(KeyNullReferenceException.class);
     }
 
     @Test
     @DisplayName("If the entity field values are incorrect, throw an EntityValidationException")
     void create_authorTitleAndContentNotValidated_throwsEntityValidationException() {
-        News news = new News(
+        NewsModel newsModel = new NewsModel(
                 0L,
                 "12",
                 "123",
@@ -116,13 +110,13 @@ class NewsRepositoryTest {
                 null,
                 null
         );
-        assertThatThrownBy(() -> repository.create(news)).isInstanceOf(EntityValidationException.class);
+        assertThatThrownBy(() -> repository.create(newsModel)).isInstanceOf(EntityValidationException.class);
     }
 
     @Test
     @DisplayName("If the entity field values are incorrect, throw an EntityValidationException")
     void update_authorTitleAndContentNotValidated_throwsEntityValidationException() {
-        News news = new News(
+        NewsModel newsModel = new NewsModel(
                 1L,
                 "12",
                 "123",
@@ -130,6 +124,6 @@ class NewsRepositoryTest {
                 null,
                 null
         );
-        assertThatThrownBy(() -> repository.update(news)).isInstanceOf(EntityValidationException.class);
+        assertThatThrownBy(() -> repository.update(newsModel)).isInstanceOf(EntityValidationException.class);
     }
 }

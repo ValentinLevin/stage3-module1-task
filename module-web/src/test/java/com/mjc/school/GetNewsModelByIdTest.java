@@ -27,7 +27,7 @@ import java.io.PrintWriter;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-class GetNewsByIdTest {
+class GetNewsModelByIdTest {
     private HttpServletRequest request;
     private HttpServletResponse response;
     private NewsService newsService;

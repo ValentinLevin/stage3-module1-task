@@ -16,7 +16,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
-public class News extends Entity {
+public class NewsModel extends Model {
     @NotEmpty(message = "News title is required")
     @Size(min = 5, message = "The title of the news must be at least 5 characters")
     @Size(max = 30, message = "The title of the news must be no more than 30 characters")
@@ -36,11 +36,11 @@ public class News extends Entity {
     @NotNull(message = "Author id is required")
     private Long authorId;
 
-    public News() { }
+    public NewsModel() { }
 
     @Override
-    public News copy() {
-        return new News(
+    public NewsModel copy() {
+        return new NewsModel(
                 this.getId(),
                 this.getTitle(),
                 this.getContent(),
@@ -51,7 +51,7 @@ public class News extends Entity {
     }
 
     @JsonCreator()
-    public News(
+    public NewsModel(
             @JsonProperty("id") Long id,
             @JsonProperty("title") String title,
             @JsonProperty("content") String content,
@@ -85,7 +85,7 @@ public class News extends Entity {
             return true;
         }
 
-        if (!(obj instanceof News other)) {
+        if (!(obj instanceof NewsModel other)) {
             return false;
         }
 

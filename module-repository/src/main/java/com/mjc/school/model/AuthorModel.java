@@ -13,23 +13,23 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
-public class Author extends Entity {
+public class AuthorModel extends Model {
     @NotEmpty(message = "Author's name is required")
     @Size(min = 3, message = "The author's name must be at least 3 characters")
     @Size(max = 15, message = "The author's name must be no more than 15 characters")
     private String name;
 
-    public Author() {
+    public AuthorModel() {
 
     }
 
-    public Author(String name) {
+    public AuthorModel(String name) {
         this.setId(0L);
         this.name = name;
     }
 
     @JsonCreator()
-    public Author(
+    public AuthorModel(
             @JsonProperty("id") Long id,
             @JsonProperty("name") String name
     ) {
@@ -43,7 +43,7 @@ public class Author extends Entity {
             return true;
         }
 
-        if (!(obj instanceof Author a)) {
+        if (!(obj instanceof AuthorModel a)) {
             return false;
         }
 
@@ -57,7 +57,7 @@ public class Author extends Entity {
     }
 
     @Override
-    public Author copy() {
-        return new Author(this.getId(), this.getName());
+    public AuthorModel copy() {
+        return new AuthorModel(this.getId(), this.getName());
     }
 }

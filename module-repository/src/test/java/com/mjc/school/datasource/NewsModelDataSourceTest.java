@@ -2,7 +2,7 @@ package com.mjc.school.datasource;
 
 import com.mjc.school.exception.CustomRepositoryException;
 import com.mjc.school.exception.EntityNotFoundException;
-import com.mjc.school.model.News;
+import com.mjc.school.model.NewsModel;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -17,14 +17,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DisplayName("NewsDataSource")
-class NewsDataSourceTest {
-    private static final DataSource<News> dataSource = DataSourceFactory.getDataSource(News.class);
-    private static final List<News> readItems = dataSource.findAll();
+class NewsModelDataSourceTest {
+    private static final DataSource<NewsModel> dataSource = DataSourceFactory.getDataSource(NewsModel.class);
+    private static final List<NewsModel> readItems = dataSource.findAll();
 
     private Long findRandomId() {
         Random random = new Random(System.currentTimeMillis());
-        List<News> news = dataSource.findAll();
-        return news.get(random.nextInt(news.size())).getId();
+        List<NewsModel> newsModels = dataSource.findAll();
+        return newsModels.get(random.nextInt(newsModels.size())).getId();
     }
 
     @Test
@@ -38,8 +38,8 @@ class NewsDataSourceTest {
                 .extracting("id")
                 .containsExactlyElementsOf(expectedIdList);
 
-        News expectedNews =
-                new News(
+        NewsModel expectedNewsModel =
+                new NewsModel(
                         1L,
                 "News 1 title",
                 "News 1 content",
@@ -48,9 +48,9 @@ class NewsDataSourceTest {
                 2L
                 );
 
-        Optional<News> actualNews = readItems.stream().filter(item -> item.getId() == 1L).findFirst();
+        Optional<NewsModel> actualNews = readItems.stream().filter(item -> item.getId() == 1L).findFirst();
 
-        assertThat(actualNews).isPresent().contains(expectedNews);
+        assertThat(actualNews).isPresent().contains(expectedNewsModel);
     }
 
     @Test
@@ -71,7 +71,7 @@ class NewsDataSourceTest {
     @Test
     @DisplayName("When an entity is added, it is saved in the dataset")
     void add_checkExistsInDataSource() throws CustomRepositoryException {
-        News expectedEntity = new News();
+        NewsModel expectedEntity = new NewsModel();
 
         expectedEntity.setTitle("New title");
         expectedEntity.setContent("New content");
@@ -81,14 +81,14 @@ class NewsDataSourceTest {
 
         long expectedItemCount = dataSource.count() + 1;
 
-        News addedEntity = dataSource.save(expectedEntity);
+        NewsModel addedEntity = dataSource.save(expectedEntity);
 
         assertThat(dataSource.count()).isEqualTo(expectedItemCount);
         assertThat(addedEntity.getId()).isNotZero();
 
         expectedEntity.setId(addedEntity.getId());
 
-        News fetchedEntity = dataSource.findById(addedEntity.getId());
+        NewsModel fetchedEntity = dataSource.findById(addedEntity.getId());
         assertThat(fetchedEntity).isNotSameAs(expectedEntity).isEqualTo(expectedEntity);
     }
 
@@ -96,15 +96,15 @@ class NewsDataSourceTest {
     @DisplayName("When the data is changed, the changes are saved in the dataset")
     void save_update_savedEntityIsEqualsToFetchedEntity_true() throws CustomRepositoryException {
         long idToChange = findRandomId();
-        News expectedEntity = dataSource.findById(idToChange);
+        NewsModel expectedEntity = dataSource.findById(idToChange);
         expectedEntity.setTitle("Changed title");
         expectedEntity.setContent("Changed content");
         expectedEntity.setAuthorId(999L);
 
         long expectedCount = dataSource.count();
 
-        News savedEntity = dataSource.save(expectedEntity);
-        News actualEntity = dataSource.findById(savedEntity.getId());
+        NewsModel savedEntity = dataSource.save(expectedEntity);
+        NewsModel actualEntity = dataSource.findById(savedEntity.getId());
 
         long actualCount = dataSource.count();
 
@@ -122,10 +122,10 @@ class NewsDataSourceTest {
     void save_update_OnSavingAndFetchingNewInstanceOfEntityCreatedNotDependOfEachOther_true() throws CustomRepositoryException {
         Long idForCheck = findRandomId();
 
-        News firstFetchEntity = dataSource.findById(idForCheck);
-        News secondFetchEntity_ForChange = dataSource.findById(idForCheck);
+        NewsModel firstFetchEntity = dataSource.findById(idForCheck);
+        NewsModel secondFetchEntity_ForChange = dataSource.findById(idForCheck);
         secondFetchEntity_ForChange.setTitle("Change title");
-        News actualEntity = dataSource.findById(idForCheck);
+        NewsModel actualEntity = dataSource.findById(idForCheck);
 
         assertThat(actualEntity)
                 .isNotSameAs(firstFetchEntity)
@@ -139,8 +139,8 @@ class NewsDataSourceTest {
     @DisplayName("When trying to search by an existing id, an entity with the corresponding id will be returned")
     void findById_found() throws CustomRepositoryException {
         Long idForFetch = findRandomId();
-        News news = dataSource.findById(idForFetch);
-        assertThat(news).isNotNull().extracting("id").isEqualTo(news.getId());
+        NewsModel newsModel = dataSource.findById(idForFetch);
+        assertThat(newsModel).isNotNull().extracting("id").isEqualTo(newsModel.getId());
     }
 
     @Test
@@ -155,7 +155,7 @@ class NewsDataSourceTest {
         int offset = 0;
         int limit  = 1;
 
-        List<News> actualItems = dataSource.findAll(offset, limit);
+        List<NewsModel> actualItems = dataSource.findAll(offset, limit);
 
         assertThat(actualItems).hasSize(limit);
 
@@ -169,9 +169,9 @@ class NewsDataSourceTest {
     @Test
     @DisplayName("If the offset is 2 and the limit is 5, then findAll returns exactly elements with indexes 2-6")
     void test() {
-        List<News> allItems = dataSource.findAll();
+        List<NewsModel> allItems = dataSource.findAll();
 
-        List<News> expectedItems =
+        List<NewsModel> expectedItems =
                 List.of(
                     allItems.get(2),
                     allItems.get(3),
@@ -183,7 +183,7 @@ class NewsDataSourceTest {
         int offset = 2;
         int limit  = 5;
 
-        List<News> actualItems = dataSource.findAll(offset, limit);
+        List<NewsModel> actualItems = dataSource.findAll(offset, limit);
 
         assertThat(actualItems).containsExactlyElementsOf(expectedItems);
     }
@@ -191,14 +191,14 @@ class NewsDataSourceTest {
     @Test
     @DisplayName("When the limit value is -1, the findAll method returns all elements after the element with index equal to offset value")
     void testWithNegativeLimitValue() {
-        List<News> expectedItems = new ArrayList<>(dataSource.findAll());
+        List<NewsModel> expectedItems = new ArrayList<>(dataSource.findAll());
         expectedItems.remove(0);
         expectedItems.remove(0);
 
         int offset = 2;
         int limit = -1;
 
-        List<News> actualItems = dataSource.findAll(offset, limit);
+        List<NewsModel> actualItems = dataSource.findAll(offset, limit);
 
         assertThat(actualItems).containsExactlyElementsOf(expectedItems);
     }
@@ -207,7 +207,7 @@ class NewsDataSourceTest {
     @DisplayName("When the offset value is equal of higher that total element count, the findAll method returns empty list")
     void testWithTooMuchOffsetValue() {
         long offset = dataSource.count();
-        List<News> actualItems = dataSource.findAll(offset, 1);
+        List<NewsModel> actualItems = dataSource.findAll(offset, 1);
         assertThat(actualItems).isEmpty();
     }
 }

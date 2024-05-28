@@ -2,8 +2,8 @@ package com.mjc.school.service.impl;
 
 import com.mjc.school.dto.EditNewsRequestDTO;
 import com.mjc.school.exception.*;
-import com.mjc.school.model.Author;
-import com.mjc.school.model.News;
+import com.mjc.school.model.AuthorModel;
+import com.mjc.school.model.NewsModel;
 import com.mjc.school.repository.Repository;
 import com.mjc.school.service.NewsService;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,12 +23,12 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-class NewsServiceUpdateNewsTest {
+class NewsServiceUpdateNewsModelTest {
     @Mock
-    private Repository<Author> authorRepository;
+    private Repository<AuthorModel> authorRepository;
 
     @Mock
-    private Repository<News> newsRepository;
+    private Repository<NewsModel> newsRepository;
 
     private NewsService newsService;
 
@@ -48,7 +48,7 @@ class NewsServiceUpdateNewsTest {
 
         Long newsIdToChange = 2L;
 
-        News newsBeforeChange = new News(
+        NewsModel newsModelBeforeChange = new NewsModel(
                 newsIdToChange,
                 "Start title",
                 "Start content",
@@ -57,20 +57,20 @@ class NewsServiceUpdateNewsTest {
                 3L
         );
 
-        News newsAfterChange = new News(
+        NewsModel newsModelAfterChange = new NewsModel(
                 newsIdToChange,
                 requestDTO.getTitle(),
                 requestDTO.getContent(),
-                newsBeforeChange.getCreateDate(),
+                newsModelBeforeChange.getCreateDate(),
                 LocalDateTime.of(2024, 4, 16, 14, 37, 31),
                 requestDTO.getAuthorId()
         );
 
         Mockito.when(authorRepository.existsById(requestDTO.getAuthorId())).thenReturn(true);
-        Mockito.when(newsRepository.readById(newsIdToChange)).thenReturn(newsBeforeChange);
-        Mockito.when(newsRepository.update(Mockito.any(News.class))).thenReturn(newsAfterChange);
+        Mockito.when(newsRepository.readById(newsIdToChange)).thenReturn(newsModelBeforeChange);
+        Mockito.when(newsRepository.update(Mockito.any(NewsModel.class))).thenReturn(newsModelAfterChange);
 
-        ArgumentCaptor<News> argumentCaptor = ArgumentCaptor.forClass(News.class);
+        ArgumentCaptor<NewsModel> argumentCaptor = ArgumentCaptor.forClass(NewsModel.class);
 
         LocalDateTime updateDateTimeFrom = LocalDateTime.now();
         newsService.update(newsIdToChange, requestDTO);
@@ -78,11 +78,11 @@ class NewsServiceUpdateNewsTest {
 
         Mockito.verify(newsRepository).update(argumentCaptor.capture());
 
-        News actualNewsToSave = argumentCaptor.getValue();
+        NewsModel actualNewsModelToSave = argumentCaptor.getValue();
 
-        assertThat(actualNewsToSave.getLastUpdateDate()).isBetween(updateDateTimeFrom, updateDateTimeTo);
-        newsAfterChange.setLastUpdateDate(actualNewsToSave.getLastUpdateDate());
-        assertThat(actualNewsToSave).isEqualTo(newsAfterChange);
+        assertThat(actualNewsModelToSave.getLastUpdateDate()).isBetween(updateDateTimeFrom, updateDateTimeTo);
+        newsModelAfterChange.setLastUpdateDate(actualNewsModelToSave.getLastUpdateDate());
+        assertThat(actualNewsModelToSave).isEqualTo(newsModelAfterChange);
     }
 
     @Test
@@ -96,7 +96,7 @@ class NewsServiceUpdateNewsTest {
                 1L
         );
 
-        News newsBeforeChange = new News(
+        NewsModel newsModelBeforeChange = new NewsModel(
                 newsIdForChange,
                 "Start title",
                 "Start content",
@@ -105,18 +105,18 @@ class NewsServiceUpdateNewsTest {
                 3L
         );
 
-        News newsAfterChange = new News(
+        NewsModel newsModelAfterChange = new NewsModel(
                 newsIdForChange,
                 requestDTO.getTitle(),
                 requestDTO.getContent(),
-                newsBeforeChange.getCreateDate(),
+                newsModelBeforeChange.getCreateDate(),
                 LocalDateTime.of(2024, 4, 16, 14, 37, 31),
                 requestDTO.getAuthorId()
         );
 
         Mockito.when(authorRepository.existsById(requestDTO.getAuthorId())).thenReturn(true);
-        Mockito.when(newsRepository.readById(newsIdForChange)).thenReturn(newsBeforeChange);
-        Mockito.when(newsRepository.update(Mockito.any(News.class))).thenReturn(newsAfterChange);
+        Mockito.when(newsRepository.readById(newsIdForChange)).thenReturn(newsModelBeforeChange);
+        Mockito.when(newsRepository.update(Mockito.any(NewsModel.class))).thenReturn(newsModelAfterChange);
 
         assertThatNoException().isThrownBy(() -> newsService.update(newsIdForChange, requestDTO));
 

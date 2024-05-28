@@ -7,17 +7,17 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public abstract class Entity {
+public abstract class Model {
     private Long id;
 
-    protected Entity() {}
+    protected Model() {}
 
     @JsonCreator()
-    protected Entity(
+    protected Model(
             @JsonProperty("id") Long id
     ) {
         this.id = id;
     }
 
-    public abstract <T extends Entity> T copy();
+    public abstract <T extends Model> T copy();
 }

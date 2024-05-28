@@ -2,8 +2,8 @@ package com.mjc.school.service.impl;
 
 import com.mjc.school.exception.CustomRepositoryException;
 import com.mjc.school.exception.EntityNotFoundException;
-import com.mjc.school.model.Author;
-import com.mjc.school.model.News;
+import com.mjc.school.model.AuthorModel;
+import com.mjc.school.model.NewsModel;
 import com.mjc.school.repository.Repository;
 import com.mjc.school.dto.AuthorDTO;
 import com.mjc.school.dto.NewsDTO;
@@ -25,12 +25,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ExtendWith(MockitoExtension.class)
-class NewsServiceTest {
+class NewsModelServiceTest {
     @Mock
-    private Repository<Author> authorRepository;
+    private Repository<AuthorModel> authorRepository;
 
     @Mock
-    private Repository<News> newsRepository;
+    private Repository<NewsModel> newsRepository;
 
     private NewsService newsService;
 
@@ -42,9 +42,9 @@ class NewsServiceTest {
     @Test
     @DisplayName("Checking the response to a single news request")
     void readById_exists_true() throws CustomServiceException, CustomRepositoryException {
-        Author author = new Author(1L, "Author 1 name");
-        News news =
-                new News(
+        AuthorModel authorModel = new AuthorModel(1L, "Author 1 name");
+        NewsModel newsModel =
+                new NewsModel(
                         1L,
                         "News 1 title",
                         "News 1 content",
@@ -53,17 +53,17 @@ class NewsServiceTest {
                         1L
                 );
 
-        Mockito.doReturn(author).when(authorRepository).readById(1L);
-        Mockito.doReturn(news).when(newsRepository).readById(1L);
+        Mockito.doReturn(authorModel).when(authorRepository).readById(1L);
+        Mockito.doReturn(newsModel).when(newsRepository).readById(1L);
 
         NewsDTO expectedNewsDTO =
                 new NewsDTO(
-                        news.getId(),
-                        news.getTitle(),
-                        news.getContent(),
+                        newsModel.getId(),
+                        newsModel.getTitle(),
+                        newsModel.getContent(),
                         "2024-04-14T17:10:12",
                         null,
-                        new AuthorDTO(author.getId(), author.getName())
+                        new AuthorDTO(authorModel.getId(), authorModel.getName())
                 );
 
         NewsDTO actualNewsDTO = newsService.readById(1L);
@@ -84,12 +84,12 @@ class NewsServiceTest {
         Long idForDelete = 1L;
         boolean expectedDeleteResult = true;
 
-        Mockito.when(newsRepository.deleteById(idForDelete)).thenReturn(expectedDeleteResult);
+        Mockito.when(newsRepository.delete(idForDelete)).thenReturn(expectedDeleteResult);
         ArgumentCaptor<Long> argumentCaptor = ArgumentCaptor.forClass(Long.class);
 
         boolean actualDeleteResult = newsService.deleteById(idForDelete);
 
-        Mockito.verify(newsRepository).deleteById(argumentCaptor.capture());
+        Mockito.verify(newsRepository).delete(argumentCaptor.capture());
 
         Long actualId = argumentCaptor.getValue();
 
@@ -101,7 +101,7 @@ class NewsServiceTest {
     @DisplayName("The incorrect ID was sent. The delete method will throw NewsNotFoundException")
     void deleteById_notExists() throws CustomRepositoryException {
         long idForDelete = 1L;
-        Mockito.when(newsRepository.deleteById(idForDelete)).thenThrow(EntityNotFoundException.class);
+        Mockito.when(newsRepository.delete(idForDelete)).thenThrow(EntityNotFoundException.class);
         assertThatThrownBy(() -> newsService.deleteById(idForDelete)).isInstanceOf(NewsNotFoundServiceException.class);
     }
 }

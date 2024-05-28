@@ -3,7 +3,7 @@ package com.mjc.school.mapper;
 import com.mjc.school.dto.AuthorDTO;
 import com.mjc.school.dto.EditNewsRequestDTO;
 import com.mjc.school.dto.NewsDTO;
-import com.mjc.school.model.News;
+import com.mjc.school.model.NewsModel;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -11,13 +11,13 @@ import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class NewsMapperTest {
+class NewsModelMapperTest {
 
     @Test
     @DisplayName("Checking the correctness of entity to DTO conversion")
     void checkEntityToDTO() {
-        News news =
-                new News(
+        NewsModel newsModel =
+                new NewsModel(
                         1L,
                         "News 1 title",
                         "New 1 content",
@@ -36,7 +36,7 @@ class NewsMapperTest {
                         new AuthorDTO(2L, null)
                 );
 
-        NewsDTO actualDTO = NewsMapper.toNewsDTO(news);
+        NewsDTO actualDTO = NewsMapper.toNewsDTO(newsModel);
 
         assertThat(actualDTO).isEqualTo(expectedDTO);
     }
@@ -44,8 +44,8 @@ class NewsMapperTest {
     @Test
     @DisplayName("Checking the correctness of entity with null lastUpdateDate to DTO conversion")
     void checkEntityToDTO_withNullLastUpdateDate() {
-        News news =
-                new News(
+        NewsModel newsModel =
+                new NewsModel(
                         1L,
                         "News 1 title",
                         "New 1 content",
@@ -64,7 +64,7 @@ class NewsMapperTest {
                         new AuthorDTO(2L, null)
                 );
 
-        NewsDTO actualDTO = NewsMapper.toNewsDTO(news);
+        NewsDTO actualDTO = NewsMapper.toNewsDTO(newsModel);
 
         assertThat(actualDTO).isEqualTo(expectedDTO);
     }
@@ -78,9 +78,9 @@ class NewsMapperTest {
                 1L
         );
 
-        News actualNews = NewsMapper.fromEditNewsRequestDTO(newsDTO);
+        NewsModel actualNewsModel = NewsMapper.fromEditNewsRequestDTO(newsDTO);
 
-        assertThat(actualNews)
+        assertThat(actualNewsModel)
                 .extracting("title", "content", "authorId")
                 .containsOnly(newsDTO.getTitle(), newsDTO.getContent(), newsDTO.getAuthorId());
     }

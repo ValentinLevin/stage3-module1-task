@@ -3,7 +3,7 @@ package com.mjc.school.datasource;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mjc.school.exception.*;
-import com.mjc.school.model.Entity;
+import com.mjc.school.model.Model;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-class DataSourceImpl<T extends Entity> implements DataSource<T> {
+class DataSourceImpl<T extends Model> implements DataSource<T> {
     private final Class<T> entityClass;
     private final Map<Long, T> values = new LinkedHashMap<>();
     private final ReadWriteLock entityLock = new ReentrantReadWriteLock();

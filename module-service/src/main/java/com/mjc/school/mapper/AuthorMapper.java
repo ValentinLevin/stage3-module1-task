@@ -1,7 +1,7 @@
 package com.mjc.school.mapper;
 
 import com.mjc.school.dto.AuthorDTO;
-import com.mjc.school.model.Author;
+import com.mjc.school.model.AuthorModel;
 import org.modelmapper.ModelMapper;
 
 public class AuthorMapper {
@@ -9,7 +9,7 @@ public class AuthorMapper {
 
     private AuthorMapper() {}
 
-    public static AuthorDTO toAuthorDTO(Author author) {
-        return author == null ? null : modelMapper.map(author, AuthorDTO.class);
+    public static AuthorDTO toAuthorDTO(AuthorModel authorModel) {
+        return authorModel == null ? null : modelMapper.map(authorModel, AuthorDTO.class);
     }
 }

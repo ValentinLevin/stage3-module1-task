@@ -3,11 +3,11 @@ package com.mjc.school.datasource;
 import com.mjc.school.exception.EntityNotFoundException;
 import com.mjc.school.exception.EntityNullReferenceException;
 import com.mjc.school.exception.KeyNullReferenceException;
-import com.mjc.school.model.Entity;
+import com.mjc.school.model.Model;
 
 import java.util.List;
 
-public interface DataSource <T extends Entity> {
+public interface DataSource <T extends Model> {
     T findById(Long id) throws KeyNullReferenceException, EntityNotFoundException;
     List<T> findAll();
 

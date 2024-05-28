@@ -4,8 +4,8 @@ import com.mjc.school.dto.EditNewsRequestDTO;
 import com.mjc.school.exception.AuthorNotFoundServiceException;
 import com.mjc.school.exception.CustomRepositoryException;
 import com.mjc.school.exception.DTOValidationServiceException;
-import com.mjc.school.model.Author;
-import com.mjc.school.model.News;
+import com.mjc.school.model.AuthorModel;
+import com.mjc.school.model.NewsModel;
 import com.mjc.school.repository.Repository;
 import com.mjc.school.service.NewsService;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,12 +27,12 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @ExtendWith(MockitoExtension.class)
-class NewsServiceAddNewsTest {
+class NewsServiceAddNewsModelTest {
     @Mock()
-    private Repository<Author> authorRepository;
+    private Repository<AuthorModel> authorRepository;
 
     @Mock()
-    private Repository<News> newsRepository;
+    private Repository<NewsModel> newsRepository;
 
     private NewsService newsService;
 
@@ -61,7 +61,7 @@ class NewsServiceAddNewsTest {
                 1L
         );
 
-        News addedNews = new News(
+        NewsModel addedNewsModel = new NewsModel(
                 1L,
                 requestDTO.getTitle(),
                 requestDTO.getContent(),
@@ -70,29 +70,29 @@ class NewsServiceAddNewsTest {
                 requestDTO.getAuthorId()
         );
 
-        Author author = new Author(
+        AuthorModel authorModel = new AuthorModel(
                 1L, "Author name"
         );
 
         Mockito.when(authorRepository.existsById(requestDTO.getAuthorId())).thenReturn(true);
-        Mockito.when(authorRepository.readById(author.getId())).thenReturn(author);
+        Mockito.when(authorRepository.readById(authorModel.getId())).thenReturn(authorModel);
 
-        Mockito.when(newsRepository.create(Mockito.any(News.class))).thenReturn(addedNews);
-        Mockito.when(newsRepository.readById(addedNews.getId())).thenReturn(addedNews);
+        Mockito.when(newsRepository.create(Mockito.any(NewsModel.class))).thenReturn(addedNewsModel);
+        Mockito.when(newsRepository.readById(addedNewsModel.getId())).thenReturn(addedNewsModel);
 
         LocalDateTime createdAtFrom = LocalDateTime.now();
         assertThatNoException().isThrownBy(() -> newsService.create(requestDTO));
         LocalDateTime createdAtTo= LocalDateTime.now();
 
-        ArgumentCaptor<News> argumentCaptor = ArgumentCaptor.forClass(News.class);
+        ArgumentCaptor<NewsModel> argumentCaptor = ArgumentCaptor.forClass(NewsModel.class);
         Mockito.verify(newsRepository).create(argumentCaptor.capture());
 
-        News newsToSave = argumentCaptor.getValue();
+        NewsModel newsModelToSave = argumentCaptor.getValue();
 
-        assertThat(newsToSave.getAuthorId()).isEqualTo(requestDTO.getAuthorId());
-        assertThat(newsToSave.getTitle()).isEqualTo(requestDTO.getTitle());
-        assertThat(newsToSave.getContent()).isEqualTo(requestDTO.getContent());
-        assertThat(newsToSave.getCreateDate()).isBetween(createdAtFrom, createdAtTo);
+        assertThat(newsModelToSave.getAuthorId()).isEqualTo(requestDTO.getAuthorId());
+        assertThat(newsModelToSave.getTitle()).isEqualTo(requestDTO.getTitle());
+        assertThat(newsModelToSave.getContent()).isEqualTo(requestDTO.getContent());
+        assertThat(newsModelToSave.getCreateDate()).isBetween(createdAtFrom, createdAtTo);
 
         requestDTO.setTitle("123456789012345678901234567890");
         requestDTO.setContent(
